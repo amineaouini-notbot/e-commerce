@@ -18,7 +18,7 @@ router.post('/signup', (req, res)=>{
             (err, result)=>{
                 if (err) throw err;
                 console.log(result.insertId)
-                let privateKey = 'qsdfqsdgdfffffsqqdf';
+                let privateKey = process.env.TOKEN_PASS;
                 let token = jwt.sign({ _id: result.insertId }, privateKey);
                 res.send(token)
             })
