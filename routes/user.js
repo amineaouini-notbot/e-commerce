@@ -1,13 +1,14 @@
 const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const db = require('../db/db')
+const jwt = require('jsonwebtoken')
 
 router.get('/signup', (req, res)=>{
     res.render('signup', {username: '', emai: '', password: ''})
 })
 
 router.post('/signup', (req, res)=>{
-    console.log(req.body)
+
     bcrypt.hash(req.body.password, 10, (err, hash)=>{
         if (err) throw err;
         
@@ -17,10 +18,12 @@ router.post('/signup', (req, res)=>{
             (err, result)=>{
                 if (err) throw err;
                 console.log(result.insertId)
+                let privateKey = 'qsdfqsdgdfffffsqqdf';
+                let token = jwt.sign({ _id: result.insertId }, privateKey);
+                res.send(token)
             })
     })
     
 
-    res.send('signedupdd')
 })
 module.exports = router;
