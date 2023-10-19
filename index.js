@@ -16,9 +16,8 @@ app.use(session({
 }))
 
 app.get('/', (req, res)=>{
-    let {token} = req.session
-    if (token) res.redirect('/user')
-    res.render('Home.ejs', {token: false})
+    
+    res.render('Home.ejs')
 })
 
 app.use('/user', userRouter)

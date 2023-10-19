@@ -2,6 +2,7 @@ const router = require('express').Router()
 const bcrypt = require('bcrypt')
 const db = require('../db/db')
 const jwt = require('jsonwebtoken')
+const verifyToken = require('./verifyToken')
 
 router.get('/signup', (req, res)=>{
     if (req.session.token) res.redirect('/user');
@@ -34,8 +35,20 @@ router.get('/login', (req, res)=>{
     res.render('login')
 })
 
+router.post('/login', (req, res)=>{
+    db.query("SELECT * FROM client WHERE email = ?", req.body.email, function (err, result) {
+        if (err) throw err;
+        console.log(result[0]);
+        let privateKey = process.env.TOKEN_PASS;
+                let token = jwt.sign({ _id: result[0].id }, privateKey);
+                req.session.token = token
+                res.redirect(`/user`)
+      });
+
+})
+
 router.get('/', (req, res)=>{
     let { token } = req.session
-    if (token) res.send('logged in with ->' + token)
+    res.send('logged in with ->' + token)
 })
 module.exports = router;
