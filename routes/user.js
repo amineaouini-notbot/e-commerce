@@ -4,6 +4,7 @@ const db = require('../db/db')
 const jwt = require('jsonwebtoken')
 
 router.get('/signup', (req, res)=>{
+    if (req.session.token) res.redirect('/user');
     res.render('signup', {username: '', emai: '', password: ''})
 })
 
@@ -17,17 +18,23 @@ router.post('/signup', (req, res)=>{
             [username, email, hash, new Date()],
             (err, result)=>{
                 if (err) throw err;
-                console.log(result.insertId)
+                // console.log(result.insertId)
                 let privateKey = process.env.TOKEN_PASS;
                 let token = jwt.sign({ _id: result.insertId }, privateKey);
                 req.session.token = token
-                res.redirect(`/user/${username}`)
+                res.redirect(`/user`)
             })
     }) 
 
 })
 
-router.get('/:username', (req, res)=>{
+router.get('/login', (req, res)=>{
+    if (req.session.token) res.redirect('/user');
+
+    res.render('login')
+})
+
+router.get('/', (req, res)=>{
     let { token } = req.session
     if (token) res.send('logged in with ->' + token)
 })
