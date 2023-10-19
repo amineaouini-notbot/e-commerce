@@ -8,7 +8,7 @@ router.get('/signup', (req, res)=>{
 })
 
 router.post('/signup', (req, res)=>{
-
+    if (req.session.token) res.redirect('/')
     bcrypt.hash(req.body.password, 10, (err, hash)=>{
         if (err) throw err;
         
@@ -20,10 +20,15 @@ router.post('/signup', (req, res)=>{
                 console.log(result.insertId)
                 let privateKey = process.env.TOKEN_PASS;
                 let token = jwt.sign({ _id: result.insertId }, privateKey);
-                res.send(token)
+                req.session.token = token
+                res.redirect(`/user/${username}`)
             })
-    })
-    
+    }) 
 
+})
+
+router.get('/:username', (req, res)=>{
+    let { token } = req.session
+    if (token) res.send('logged in with ->' + token)
 })
 module.exports = router;
