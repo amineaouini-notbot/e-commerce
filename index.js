@@ -2,12 +2,18 @@ const express = require('express')
 const app = express();
 const db = require('./db/db')
 const userRouter = require('./routes/user')
+const session = require('express-session')
 
 require('dotenv').config()
 
 app.use(express.urlencoded({ extended: false}))
 app.set('views', './views')
 app.set('view engine', 'ejs')
+app.use(session({
+    secret: 'secret-key',
+    resave: false,
+    saveUninitialized: false
+}))
 
 app.get('/', (req, res)=>{
     res.render('Home.ejs')
