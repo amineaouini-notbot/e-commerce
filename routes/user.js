@@ -18,21 +18,24 @@ router.post('/signup', (req, res)=>{
         db.query('INSERT INTO client (username, email, password, created_at) VALUES (?, ?, ?, ?)', 
             [username, email, hash, new Date()],
             (err, result)=>{
-                if (err) throw err;
-                // console.log(result.insertId)
-                let privateKey = process.env.TOKEN_PASS;
-                let token = jwt.sign({ _id: result.insertId }, privateKey);
-                req.session.token = token
-                res.redirect(`/user`)
+                if (err) {res.redirect('/signup')}
+                else {
+
+                    // console.log(result.insertId)
+                    let privateKey = process.env.TOKEN_PASS;
+                    let token = jwt.sign({ _id: result.insertId }, privateKey);
+                    req.session.token = token
+                    res.redirect(`/user`)
+                }
             })
     }) 
 
 })
 
 router.get('/login', (req, res)=>{
-    if (req.session.token) res.redirect('/user');
+    if (req.session.token) {res.redirect('/user')}
+    else {res.render('login')}
 
-    res.render('login')
 })
 
 router.post('/login', (req, res)=>{
