@@ -1,5 +1,13 @@
 CREATE DATABASE ecom;
 USE ecom;
+
+CREATE TABLE admin(
+    id INT AUTO_INCREMENT NOT NULL,
+    username VARCHAR(230) UNIQUE NOT NULL,
+    password BINARY(255) NOT NULL,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE client(
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(230) UNIQUE NOT NULL,
@@ -37,3 +45,6 @@ CREATE TABLE cart_items(
     FOREIGN KEY (cart_id) REFERENCES cart(id),
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
+
+INSERT INTO admin (username, password)
+VALUES ('admin', HEX(md5('admin')));
