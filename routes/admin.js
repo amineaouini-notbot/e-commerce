@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const db = require('../db/db')
+const jwt = require("jsonwebtoken")
 
 router.get('/', (req, res)=>{
-    if (req.session.adminLogged) {res.redirect('/admin/login')}
+    if (!req.session.adminLogged) {res.redirect('/admin/login')}
     else res.send('logged as admin')
 })
 
@@ -14,13 +15,14 @@ router.get('/login', (req, res)=>{
 
 router.post('/login', (req, res)=>{
     let {username, password} = req.body
-    db.query('SELECT id FROM admin WHERE username = (?) AND password = UNHEX(md5(?))',
+    db.query('SELECT id FROM admin WHERE username = (?) AND UNHEX(password) = (?)',
         [username, password],
         (err, result) =>{
-            if (err) { res.send(`You can't login as Admin!`)}
+            if ( err || !result[0] ) { res.send(`You can't login as Admin!`)}
             else {
+
                 let privateKey = process.env.TOKEN_PASS;
-                let token = jwt.sign({ _id: result.insertId }, privateKey);
+                let token = jwt.sign({ _id: result[0].id }, privateKey);
                 req.session.adminLogged = token
                 res.redirect('/admin')
             }
