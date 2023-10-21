@@ -2,6 +2,7 @@ const express = require('express')
 const app = express();
 const db = require('./db/db')
 const userRouter = require('./routes/user')
+const adminRouter = require('./routes/admin')
 const session = require('express-session')
 
 require('dotenv').config()
@@ -25,6 +26,8 @@ app.get('/', (req, res)=>{
 })
 
 app.use('/user', userRouter)
+app.use('/admin', adminRouter)
+
 const PORT = 5000
 app.listen(PORT, ()=>{
     console.log('server works on port 5000!')
