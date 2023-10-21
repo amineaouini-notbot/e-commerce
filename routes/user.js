@@ -43,15 +43,16 @@ router.post('/login', (req, res)=>{
         if (err) throw err;
         console.log(result[0]);
         let privateKey = process.env.TOKEN_PASS;
-                let token = jwt.sign({ _id: result[0].id }, privateKey);
-                req.session.token = token
-                res.redirect(`/user`)
+        let token = jwt.sign({ _id: result[0].id }, privateKey);
+        req.session.token = token
+        res.redirect(`/user`)
       });
 
 })
 
-router.get('/', (req, res)=>{
+router.get('/', verifyToken, (req, res)=>{
     let { token } = req.session
-    res.send('logged in with ->' + token)
+    if (!token) res.redirect("/")
+    else res.send('logged in with ->' + token)
 })
 module.exports = router;
