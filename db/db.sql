@@ -4,7 +4,7 @@ USE ecom;
 CREATE TABLE admin(
     id INT AUTO_INCREMENT NOT NULL,
     username VARCHAR(230) UNIQUE NOT NULL,
-    password BINARY(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -47,4 +47,4 @@ CREATE TABLE cart_items(
 );
 
 INSERT INTO admin (username, password)
-VALUES ('admin', HEX(md5('admin')));
+VALUES ('admin', HEX("admin"));
