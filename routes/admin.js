@@ -1,11 +1,11 @@
 const router = require('express').Router();
 const session = require('express-session');
 const db = require('../db/db')
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const verifyAdmin = require('./verifyAdmin');
 
-router.get('/', (req, res)=>{
-    if (!req.session.adminLogged) {res.redirect('/admin/login')}
-    else if( !req.session.categories){
+router.get('/', verifyAdmin, (req, res)=>{
+    if( !req.session.categories){
         db.query('SELECT * from category', (err, result)=>{
             if (err) {res.send('problem accured!')}
             else {
@@ -30,6 +30,7 @@ router.get('/login', (req, res)=>{
 })
 
 router.post('/login', (req, res)=>{
+
     let {username, password} = req.body
     db.query('SELECT id FROM admin WHERE username = (?) AND password = md5(?)',
         [username, password],
@@ -38,7 +39,7 @@ router.post('/login', (req, res)=>{
             if ( err || !result[0] ) { res.send(`You can't login as Admin!`)}
             else {
 
-                let privateKey = process.env.TOKEN_PASS;
+                let privateKey = process.env.ADMIN_TOKEN_PASS;
                 let token = jwt.sign({ _id: result[0].id }, privateKey);
                 req.session.adminLogged = token
                 res.redirect('/admin')
@@ -47,7 +48,7 @@ router.post('/login', (req, res)=>{
     )
 })
 
-router.post('/addCateg', (req, res)=>{
+router.post('/addCateg', verifyAdmin, (req, res)=>{
     let {title} = req.body
     if (!req.session.adminLogged) {res.redirect('/admin/login')}
         else {
