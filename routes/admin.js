@@ -1,10 +1,22 @@
 const router = require('express').Router();
+const session = require('express-session');
 const db = require('../db/db')
 const jwt = require("jsonwebtoken")
 
 router.get('/', (req, res)=>{
     if (!req.session.adminLogged) {res.redirect('/admin/login')}
-    else res.send('logged as admin')
+    else {
+        db.query('SELECT * from category', (err, result)=>{
+            if (err) {res.send('problem accured!')}
+            else {
+                // console.log(result)
+                req.session.categories = result;
+                
+                res.render('adminHome')
+            }
+        })
+    
+    }
 })
 
 
@@ -29,5 +41,23 @@ router.post('/login', (req, res)=>{
             }
         } 
     )
+})
+
+router.post('/addCateg', (req, res)=>{
+    let {title} = req.body
+    if (!req.session.adminLogged) {res.redirect('/admin/login')}
+        else {
+        db.query("INSERT INTO category (title) VALUES (?)", [title], (err, result)=>{
+            if (err) {res.send("couldn't add category")}
+            else {
+                console.log(result)
+                if(req.session.categories[0]) {
+                   req.session.categories.push({id, title}) 
+                } else req.session.categories = [{id, title}]
+
+                res.redirect('/admin') 
+            }
+        })
+    }
 })
 module.exports = router
