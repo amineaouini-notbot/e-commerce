@@ -15,9 +15,10 @@ router.get('/login', (req, res)=>{
 
 router.post('/login', (req, res)=>{
     let {username, password} = req.body
-    db.query('SELECT id FROM admin WHERE username = (?) AND UNHEX(password) = (?)',
+    db.query('SELECT id FROM admin WHERE username = (?) AND password = md5(?)',
         [username, password],
         (err, result) =>{
+            console.log(result)
             if ( err || !result[0] ) { res.send(`You can't login as Admin!`)}
             else {
 
