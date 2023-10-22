@@ -12,10 +12,10 @@
             <div class="col col-lg-2">
                 <h5>Categories:</h5>
                 <form action="/admin/addCateg" method="post">
-                    <ul>
-
+                    <ul class="list-group-item list-group-item-action">
+                        <li class="list-group-item list-group-item-action list-group-item-dark">All</li>
                         <% categories.forEach(function(category) { %>
-                            <li><%= category.title %></li>
+                            <li class="list-group-item list-group-item-action list-group-item-primary"><%= category.title %></li>
                         <% }); %> 
                     </ul>
                     <label for="title" class="mb-4">Add Category:</label>
