@@ -12,7 +12,7 @@ router.get('/', (req, res)=>{
                 // console.log(result)
                 req.session.categories = result;
                 
-                res.render('adminHome')
+                res.render('adminHome', {categories: result})
             }
         })
     
@@ -50,9 +50,9 @@ router.post('/addCateg', (req, res)=>{
         db.query("INSERT INTO category (title) VALUES (?)", [title], (err, result)=>{
             if (err) {res.send("couldn't add category")}
             else {
-                console.log(result)
                 if(req.session.categories[0]) {
-                   req.session.categories.push({id, title}) 
+                    let id = result.insertId
+                    req.session.categories.push({id, title}) 
                 } else req.session.categories = [{id, title}]
 
                 res.redirect('/admin') 
