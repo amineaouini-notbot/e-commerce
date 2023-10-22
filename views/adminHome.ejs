@@ -12,6 +12,12 @@
             <div class="col col-lg-2">
                 <h5>Categories:</h5>
                 <form action="/admin/addCateg" method="post">
+                    <ul>
+
+                        <% categories.forEach(function(category) { %>
+                            <li><%= category.title %></li>
+                        <% }); %> 
+                    </ul>
                     <label for="title" class="mb-4">Add Category:</label>
                     <input required type="title" name="title" class="form-control">
                     <button class="btn btn-primary">+</button>
