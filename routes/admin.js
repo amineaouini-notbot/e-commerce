@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken")
 
 router.get('/', (req, res)=>{
     if (!req.session.adminLogged) {res.redirect('/admin/login')}
-    else {
+    else if( !req.session.categories){
         db.query('SELECT * from category', (err, result)=>{
             if (err) {res.send('problem accured!')}
             else {
@@ -16,6 +16,10 @@ router.get('/', (req, res)=>{
             }
         })
     
+    } else {
+        let {categories} = req.session              
+        res.render('adminHome', {categories})
+
     }
 })
 
