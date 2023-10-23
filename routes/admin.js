@@ -35,7 +35,6 @@ router.post('/login', (req, res)=>{
     db.query('SELECT id FROM admin WHERE username = (?) AND password = md5(?)',
         [username, password],
         (err, result) =>{
-            console.log(result)
             if ( err || !result[0] ) { res.send(`You can't login as Admin!`)}
             else {
 
@@ -64,5 +63,10 @@ router.post('/addCateg', verifyAdmin, (req, res)=>{
             }
         })
     }
+})
+
+router.get('/addProd', verifyAdmin, (req, res)=>{
+    let {categories} = req.session
+    res.render('addProd', {categories})
 })
 module.exports = router
