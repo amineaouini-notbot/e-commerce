@@ -16,27 +16,30 @@
                 <input required type="title" name="title" class="form-control">
             </div>
             <hr>
-            <div class="form-group">
+            <div class="d-flex flex-row">
 
-                <label for="category" class="mb-4">category:</label>
-                <select name="category" id="select-categ" class="form-select form-select-padding-y-lg" aria-label="Default select example">
-                    <% categories.forEach(categ => { %>
-                        <option value="<%= categ.id %>"><%= categ.title %></option>
+                <div class="form-group p-2">
                         
-                    <%  }) %>
-                </select>
-            </div>
-            <hr>
-            <div class="form-group">
-
-                <label for="price" class="mb-4">price:</label>
-                <input style="width: 200px;" type="number" required type="price" name="price" class="form-control">
+                    <label for="category" class="mb-4">category:</label>
+                    <select name="category" id="select-categ" class="form-select form-select-padding-y-lg" aria-label="Default select example">
+                        <% categories.forEach(categ => { %>
+                            <option value="<%= categ.id %>"><%= categ.title %></option>
+                        
+                        <%  }) %>
+                    </select>
+                </div>
+                
+                <div class="form-group p-2">
+                    
+                    <label for="price" class="mb-4">price:</label>
+                    <input style="width: 200px;" type="number" required type="price" name="price" class="form-control">
+                </div>
             </div>
             <hr>
             <div class="form-group">
 
                 <label for="image">Upload Image</label>
-                <input id="input-img"  type="file" name="image" class="form-control mb-4" accept="image/*">
+                <input id="input-img"  type="file" name="image" class="form-control mb-4" accept="image/*" style="width: 500px;">
                 <img src="" alt="img isn't uploaded yet" style="width: 200px;">
             </div>
             <hr>
@@ -45,6 +48,7 @@
                 <label for="description" class="mb-4">description:</label>
                 <textarea  name="description" class="form-control" ></textarea>
             </div>
+            <button type="submit">Add new Product</button>
         </form>
     </div>
 </body>
