@@ -35,10 +35,24 @@
             <hr>
             <div class="form-group">
 
+                <label for="image">Upload Image</label>
+                <input id="input-img"  type="file" name="image" class="form-control mb-4" accept="image/*">
+                <img src="" alt="img isn't uploaded yet" style="width: 200px;">
+            </div>
+            <hr>
+            <div class="form-group">
+
                 <label for="description" class="mb-4">description:</label>
                 <textarea  name="description" class="form-control" ></textarea>
             </div>
         </form>
     </div>
 </body>
+<script>
+    let input = document.querySelector('#input-img')
+    let img = document.querySelector('img')
+    input.addEventListener('change', ()=>{
+        img.src = URL.createObjectURL(input.files[0])
+    })
+</script>
 </html>
