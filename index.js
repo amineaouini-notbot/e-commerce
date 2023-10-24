@@ -4,11 +4,13 @@ const db = require('./db/db')
 const userRouter = require('./routes/user')
 const adminRouter = require('./routes/admin')
 const session = require('express-session')
+const fileUpload = require('express-fileupload') 
 
 require('dotenv').config()
 
+app.use(fileUpload())
 app.use(express.urlencoded({ extended: false}))
-app.set('views', './views')
+app.set('views', './public/views')
 app.set('view engine', 'ejs')
 app.use(session({
     secret: 'secret-key',

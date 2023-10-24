@@ -3,6 +3,7 @@ const session = require('express-session');
 const db = require('../db/db')
 const jwt = require("jsonwebtoken");
 const verifyAdmin = require('./verifyAdmin');
+const fs = require('fs');
 
 router.get('/', verifyAdmin, (req, res)=>{
     if( !req.session.categories){
@@ -82,10 +83,17 @@ router.post('/addProd', verifyAdmin, (req, res)=>{
     db.query('INSERT INTO product (title, category_id, price, description, created_at) VALUES (?, ?, ?, ?, ?)',
     [title, parseInt(category), parseInt(price), description, new Date()], (err, result) =>{
         if(err) {throw err}
-            // image.mv(`${__dirname}/../upload/${image.name}`);
-            else {console.log(result.insertId)
-            // res.render('test', {id: insertId, image: image.name})
-                res.redirect('/admin/addProd')
+        else {
+                fs.mkdir(`${__dirname}/../public/upload/${result.insertId}`, err =>{
+                    if (err) throw err
+                    else{
+
+                        image.mv(`${__dirname}/../public/upload/${result.insertId}/${image.name}`);
+                        // res.render('test', {id: insertId, image: image.name})
+                        res.redirect('/admin')
+                    }
+                });
+               
             }
         })
 })
