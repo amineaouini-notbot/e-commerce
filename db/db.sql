@@ -25,6 +25,7 @@ CREATE TABLE product(
     id INT AUTO_INCREMENT PRIMARY KEY,
     category_id INT NOT NULL,
     title VARCHAR(230) NOT NULL,
+    price INT NOT NULL,
     description VARCHAR(230) NOT NULL,
     created_at DATETIME NOT NULL,
     FOREIGN KEY(category_id) REFERENCES category(id)
