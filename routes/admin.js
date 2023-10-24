@@ -84,6 +84,9 @@ router.post('/addProd', verifyAdmin, (req, res)=>{
     [title, parseInt(category), parseInt(price), description, new Date()], (err, result) =>{
         if(err) {throw err}
         else {
+                if (!fs.existsSync(`${__dirname}/../public/upload`)){
+                    fs.mkdirSync(`${__dirname}/../public/upload/`)
+                }
                 fs.mkdir(`${__dirname}/../public/upload/${result.insertId}`, err =>{
                     if (err) throw err
                     else{
