@@ -6,20 +6,28 @@ const verifyAdmin = require('./verifyAdmin');
 const fs = require('fs');
 
 router.get('/', verifyAdmin, (req, res)=>{
-    if( !req.session.categories){
+    if( !req.session.categories && !req.session.products){
         db.query('SELECT * from category', (err, result)=>{
             if (err) {res.send('problem accured!')}
             else {
                 // console.log(result)
                 req.session.categories = result;
+                db.query('SELECT * from product', (err, result)=>{
+                    if (err) {res.send('problem accured!')}
+                    else {
+                        // console.log(result)
+                        req.session.products = result;
+                        console.log(result[result.length-1])
+                        res.render('adminHome', {categories: req.session.categories, products: result})
+                    }
+                })
                 
-                res.render('adminHome', {categories: result})
             }
         })
     
     } else {
-        let {categories} = req.session              
-        res.render('adminHome', {categories})
+        let {categories, products} = req.session              
+        res.render('adminHome', {categories, products })
 
     }
 })
@@ -77,7 +85,6 @@ router.post('/addProd', verifyAdmin, (req, res)=>{
         return;
     }
     let {image} = req.files;
-    console.log(parseInt(req.body.category), 'qsdfd')
     let {title, category, price, description} = req.body
     // res.redirect('/admin/addProd')
     db.query('INSERT INTO product (title, category_id, price, description, created_at) VALUES (?, ?, ?, ?, ?)',
@@ -93,9 +100,9 @@ router.post('/addProd', verifyAdmin, (req, res)=>{
 
                         image.mv(`${__dirname}/../public/upload/${result.insertId}/${image.name}`);
                         let id = result.insertId
-                        if(req.session.products[0]) {
-                            req.session.products.push({id, title, category, price, description})
-                        } else req.session.products = [{id, title, category, price, description}]
+                        if(!!req.session.products) {
+                            req.session.products.push({id, title, category_id: category, price, description})
+                        } else req.session.products = [{id, title,category_id: category, price, description}]
 
                         res.redirect('/admin')
                     }
