@@ -92,7 +92,11 @@ router.post('/addProd', verifyAdmin, (req, res)=>{
                     else{
 
                         image.mv(`${__dirname}/../public/upload/${result.insertId}/${image.name}`);
-                        // res.render('test', {id: insertId, image: image.name})
+                        let id = result.insertId
+                        if(req.session.products[0]) {
+                            req.session.products.push({id, title, category, price, description})
+                        } else req.session.products = [{id, title, category, price, description}]
+
                         res.redirect('/admin')
                     }
                 });
