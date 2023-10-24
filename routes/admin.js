@@ -54,8 +54,8 @@ router.post('/addCateg', verifyAdmin, (req, res)=>{
         db.query("INSERT INTO category (title) VALUES (?)", [title], (err, result)=>{
             if (err) {res.send("couldn't add category")}
             else {
+                let id = result.insertId
                 if(req.session.categories[0]) {
-                    let id = result.insertId
                     req.session.categories.push({id, title}) 
                 } else req.session.categories = [{id, title}]
 
