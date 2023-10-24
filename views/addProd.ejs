@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Add Product</h1>
-        <form action="/admin/addProd" method="post">
+        <form action="/admin/addProd" method="post" enctype="multipart/form-data">
             <div class="form-group">
 
                 <label for="title" class="mb-4">title:</label>
@@ -38,8 +38,8 @@
             <hr>
             <div class="form-group">
 
-                <label for="image">Upload Image</label>
-                <input id="input-img"  type="file" name="image" class="form-control mb-4" accept="image/*" style="width: 500px;">
+                <label for="">Upload Image</label>
+                <input id="input-img"  type="file" name="image" class="form-control mb-4" style="width: 500px;">
                 <img src="" alt="img isn't uploaded yet" style="width: 200px;">
             </div>
             <hr>
@@ -58,5 +58,6 @@
     input.addEventListener('change', ()=>{
         img.src = URL.createObjectURL(input.files[0])
     })
+    
 </script>
 </html>
