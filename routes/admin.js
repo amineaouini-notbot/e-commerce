@@ -69,4 +69,24 @@ router.get('/addProd', verifyAdmin, (req, res)=>{
     let {categories} = req.session
     res.render('addProd', {categories})
 })
+
+router.post('/addProd', verifyAdmin, (req, res)=>{
+    if (!req.files || Object.keys(req.files).length === 0) {
+        res.status(400).send('No files were uploaded.');
+        return;
+    }
+    let {image} = req.files;
+    console.log(parseInt(req.body.category), 'qsdfd')
+    let {title, category, price, description} = req.body
+    // res.redirect('/admin/addProd')
+    db.query('INSERT INTO product (title, category_id, price, description, created_at) VALUES (?, ?, ?, ?, ?)',
+    [title, parseInt(category), parseInt(price), description, new Date()], (err, result) =>{
+        if(err) {throw err}
+            // image.mv(`${__dirname}/../upload/${image.name}`);
+            else {console.log(result.insertId)
+            // res.render('test', {id: insertId, image: image.name})
+                res.redirect('/admin/addProd')
+            }
+        })
+})
 module.exports = router
