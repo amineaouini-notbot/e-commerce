@@ -15,9 +15,14 @@ router.get('/', verifyAdmin, (req, res)=>{
                 db.query('SELECT * from product', (err, result)=>{
                     if (err) {res.send('problem accured!')}
                     else {
-                        // console.log(result)
+                        if(!!result[0]){
+                        for(let i in result){
+                            const fileList = fs.readdirSync(__dirname+'/../public/upload/' + result[i].id)
+                            result[i].images = fileList; 
+                            console.log(result[i].id,fileList)
+                            
+                        }}
                         req.session.products = result;
-                        console.log(result[result.length-1])
                         res.render('adminHome', {categories: req.session.categories, products: result})
                     }
                 })
@@ -101,8 +106,8 @@ router.post('/addProd', verifyAdmin, (req, res)=>{
                         image.mv(`${__dirname}/../public/upload/${result.insertId}/${image.name}`);
                         let id = result.insertId
                         if(!!req.session.products) {
-                            req.session.products.push({id, title, category_id: category, price, description})
-                        } else req.session.products = [{id, title,category_id: category, price, description}]
+                            req.session.products.push({id, title, category_id: category,images: [image.name], price, description})
+                        } else req.session.products = [{id, title, category_id: category,images: [image.name], price, description}]
 
                         res.redirect('/admin')
                     }
