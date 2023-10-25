@@ -116,4 +116,12 @@ router.post('/addProd', verifyAdmin, (req, res)=>{
             }
         })
 })
+
+router.get('/product/:id/edit', verifyAdmin, (req, res)=>{
+    const {id} = req.params
+    req.session.editProd = id;
+    const {categories, products} = req.session;
+
+    res.render('editProd', {categories, product: products[id-1]})
+})
 module.exports = router

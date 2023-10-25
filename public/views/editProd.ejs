@@ -23,8 +23,13 @@
                     <label for="category" class="mb-4">category:</label>
                     <select name="category" id="select-categ" class="form-select form-select-padding-y-lg" aria-label="Default select example">
                         <% categories.forEach(categ => { %>
-                            <option value="<%= categ.id %>" ><%= categ.title %></option>
+                            <% if(categ.id === product.category_id) { %>
+                                <option value="<%= categ.id %>" selected><%= categ.title %></option>
                         
+                            <%} else {%>
+
+                            <option value="<%= categ.id %>" ><%= categ.title %></option>
+                            <% } %>
                         <%  }) %>
                     </select>
                 </div>
