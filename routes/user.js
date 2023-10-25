@@ -6,7 +6,7 @@ const verifyToken = require('./verifyToken')
 
 router.get('/signup', (req, res)=>{
     if (req.session.token) res.redirect('/user');
-    res.render('signup', {username: '', emai: '', password: ''})
+    res.render('./views/signup', {username: '', emai: '', password: ''})
 })
 
 router.post('/signup', (req, res)=>{

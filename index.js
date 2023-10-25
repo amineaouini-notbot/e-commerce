@@ -10,7 +10,8 @@ require('dotenv').config()
 
 app.use(fileUpload())
 app.use(express.urlencoded({ extended: false}))
-app.set('views', './public/views')
+app.use(express.static(__dirname + '/public'));
+app.set('views', __dirname +'/public/views')
 app.set('view engine', 'ejs')
 app.use(session({
     secret: 'secret-key',
@@ -23,7 +24,7 @@ app.get('/', (req, res)=>{
         res.redirect('/user')
     } else {
 
-        res.render('Home.ejs')
+        res.render('Home')
     }
 })
 
