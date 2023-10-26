@@ -10,9 +10,9 @@ const methodOverride = require('method-override');
 
 require('dotenv').config()
 
-app.use(methodOverride());
 app.use(fileUpload())
 app.use(express.urlencoded({ extended: false}))
+app.use(methodOverride("_method"));
 app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname +'/public/views')
 app.set('view engine', 'ejs')
