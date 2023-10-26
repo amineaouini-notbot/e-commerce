@@ -5,9 +5,12 @@ const userRouter = require('./routes/user')
 const adminRouter = require('./routes/admin')
 const session = require('express-session')
 const fileUpload = require('express-fileupload') 
+const methodOverride = require('method-override');
+
 
 require('dotenv').config()
 
+app.use(methodOverride());
 app.use(fileUpload())
 app.use(express.urlencoded({ extended: false}))
 app.use(express.static(__dirname + '/public'));

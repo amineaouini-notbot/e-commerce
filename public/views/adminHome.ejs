@@ -31,6 +31,7 @@
                             
                             <div><%= product.title %></div>
                             <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="image not found" style="width: 150px;"/>
+                            <a href="/admin/product/<%=product.id%>/edit">edit</a>
                         </div>
                         <% if (product.id % 4 === 0) {%>
                               <div class="w-100"></div>
