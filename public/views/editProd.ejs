@@ -9,7 +9,7 @@
 <body>
     <div class="container">
         <h1>Edit Product</h1>
-        <form action="/admin/product/update?_method=PUT" method="post">
+        <form method="POST" action="/admin/product/<%=product.id%>/edit?_method=PUT" enctype="multipart/form-data">
             <div class="form-group">
 
                 <label for="title" class="mb-4">title:</label>
@@ -44,7 +44,7 @@
             <div class="form-group">
 
                 <label for="">Upload Image</label>
-                <input id="input-img"  type="file" name="image" class="form-control mb-4" style="width: 500px;">
+                <input id="input-img"  type="file" name="image" class="form-control mb-4" style="width: 400px;" multiple>
                 <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="img isn't uploaded yet" style="width: 200px;">
             </div>
             <hr>
