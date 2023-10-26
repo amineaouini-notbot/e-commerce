@@ -45,7 +45,14 @@
 
                 <label for="">Upload Image</label>
                 <input id="input-img"  type="file" name="image" class="form-control mb-4" style="width: 400px;" multiple>
-                <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="img isn't uploaded yet" style="width: 200px;">
+                <div class="row">
+                    <% product.images.forEach(image => {%>
+
+                        <img src="/upload/<%= product.id %>/<%= image %>" alt="img isn't uploaded yet" style="width: 200px;">
+
+                    <%}) %>
+
+                </div>
             </div>
             <hr>
             <div class="form-group">
