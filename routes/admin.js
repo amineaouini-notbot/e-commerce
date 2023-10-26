@@ -19,7 +19,6 @@ router.get('/', verifyAdmin, (req, res)=>{
                         for(let i in result){
                             const fileList = fs.readdirSync(__dirname+'/../public/upload/' + result[i].id)
                             result[i].images = fileList; 
-                            console.log(result[i].id,fileList)
                             
                         }}
                         req.session.products = result;
@@ -121,7 +120,25 @@ router.get('/product/:id/edit', verifyAdmin, (req, res)=>{
     const {id} = req.params
     req.session.editProd = id;
     const {categories, products} = req.session;
-
     res.render('editProd', {categories, product: products[id-1]})
+})
+
+router.put('/product/:id/edit',  (req, res)=>{
+    // if (Object.keys(req.files).length > 0) {
+
+    // }
+    let {title, category, price, description} = req.body
+    let {id} = req.params
+    // let images = req.files.image;
+    
+    db.query("UPDATE product SET title = ?, category_id=?, price=?, description=? WHERE id=?",
+        [title, category, price, description, id], (err, result)=>{
+            if(err) res.send("product didn't update!")
+            console.log(result)
+        })
+    res.redirect('/admin')
+    // res.send(id)
+    // res.render('<div>' + id + '<div>')
+
 })
 module.exports = router
