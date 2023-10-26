@@ -124,21 +124,27 @@ router.get('/product/:id/edit', verifyAdmin, (req, res)=>{
 })
 
 router.put('/product/:id/edit',  (req, res)=>{
-    // if (Object.keys(req.files).length > 0) {
-
-    // }
     let {title, category, price, description} = req.body
     let {id} = req.params
-    // let images = req.files.image;
-    
+    let {image} = req.files;
     db.query("UPDATE product SET title = ?, category_id=?, price=?, description=? WHERE id=?",
-        [title, category, price, description, id], (err, result)=>{
+    [title, category, price, description, id], (err, result)=>{
             if(err) res.send("product didn't update!")
             console.log(result)
+            let pics = []
+            if (image.length > 0) {
+
+                for(let i in image){
+                    image[i].mv(`${__dirname}/../public/upload/${id}/${image[i].name}`)
+                    pics.push(image[i].name)
+                }
+            }
+            req.session.products[id] = {id, title, category_id: category, price, description,
+                images: [...req.session.products[id].images, ...pics]}
+            
+            
+            res.redirect('/admin')
         })
-    res.redirect('/admin')
-    // res.send(id)
-    // res.render('<div>' + id + '<div>')
 
 })
 module.exports = router
