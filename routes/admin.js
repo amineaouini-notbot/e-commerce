@@ -165,5 +165,18 @@ router.put('/product/:id/edit', verifyAdmin, (req, res)=>{
 
 })
 
-
+router.delete('/categ/delete/:id', verifyAdmin, (req, res)=>{
+    let {id} = req.params;
+    console.log(id)
+    db.query("DELETE FROM product WHERE category_id = (?)", [id], (err, result)=>{
+        if(err) res.send("couldn't delete products")
+        else{
+        console.log(result)
+        // db.query("DELETE FROM category WHERE id = (?)", [id], (err, result)=>{
+        //     if(err) res.send("couldn't delete category")
+            res.redirect('/admin')
+        // })
+    }
+    })
+})
 module.exports = router
