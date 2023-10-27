@@ -120,31 +120,50 @@ router.get('/product/:id/edit', verifyAdmin, (req, res)=>{
     const {id} = req.params
     req.session.editProd = id;
     const {categories, products} = req.session;
-    res.render('editProd', {categories, product: products[id-1]})
+    for(let i in products){
+        if(products[i].id = id) {
+            res.render('editProd', {categories, product: products[i]})
+            return;
+        }
+    
+    }
+    res.send('couldnt find product')
 })
 
-router.put('/product/:id/edit',  (req, res)=>{
+router.put('/product/:id/edit', verifyAdmin, (req, res)=>{
     let {title, category, price, description} = req.body
     let {id} = req.params
-    let {image} = req.files;
+    
     db.query("UPDATE product SET title = ?, category_id=?, price=?, description=? WHERE id=?",
     [title, category, price, description, id], (err, result)=>{
-            if(err) res.send("product didn't update!")
-            console.log(result)
-            let pics = []
-            if (image.length > 0) {
+        if(err) return res.send("product didn't update!")
+        let pics = []
+        if (!!req.files) {
+            
+            let {image} = req.files;
+            
+            if(Array.isArray(image)){
 
                 for(let i in image){
-                    image[i].mv(`${__dirname}/../public/upload/${id}/${image[i].name}`)
-                    pics.push(image[i].name)
+                image[i].mv(`${__dirname}/../public/upload/${id}/${image[i].name}`);
                 }
+            } else image.mv(`${__dirname}/../public/upload/${id}/${image.name}`);
+            
+
+        }
+        for(let i in req.session.products){
+            if (req.session.products[i].id === id){
+
+                req.session.products[i] = {id, title, category_id: category, price, description,
+                images: [...req.session.products[i].images, ...pics]}
+                    res.redirect('/admin')
+                    return
             }
-            req.session.products[id] = {id, title, category_id: category, price, description,
-                images: [...req.session.products[id].images, ...pics]}
+            }
             
-            
-            res.redirect('/admin')
         })
 
 })
+
+
 module.exports = router
