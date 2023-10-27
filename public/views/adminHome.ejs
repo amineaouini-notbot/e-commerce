@@ -11,13 +11,22 @@
         <div class="row">
             <div class="col col-lg-2">
                 <h5>Categories:</h5>
-                <form action="/admin/addCateg" method="post">
-                    <ul class="list-group-item list-group-item-action">
-                        <li class="list-group-item list-group-item-action list-group-item-dark">All</li>
-                        <% categories.forEach(function(category) { %>
-                            <li class="list-group-item list-group-item-action list-group-item-primary"><%= category.title %></li>
+                <ul class="list-group-item list-group-item-action">
+                    <li class="list-group-item list-group-item-action list-group-item-dark">All</li>
+                    <% categories.forEach(function(category) { %>
+                        <li class="list-group-item list-group-item-action list-group-item-primary" >
+                            <div style="display:flex; justify-content:space-between;">
+                                
+                                <p><%= category.title %></p>
+                                <form action="/admin/categ/delete/<%= category.id%>?_method=delete" method="post" >
+                                    <button class="btn btn-danger" type="submit">X</button>
+                                </form>
+                            </div>
+                            
+                        </li>
                         <% }); %> 
                     </ul>
+                    <form action="/admin/addCateg" method="post">
                     <label for="title" class="mb-4">Add Category:</label>
                     <input required type="title" name="title" class="form-control">
                     <button class="btn btn-primary">+</button>
