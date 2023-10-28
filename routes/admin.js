@@ -4,6 +4,8 @@ const db = require('../db/db')
 const jwt = require("jsonwebtoken");
 const verifyAdmin = require('./verifyAdmin');
 const fs = require('fs');
+var {rimraf} = require("rimraf");
+const { parse } = require('path');
 
 router.get('/', verifyAdmin, (req, res)=>{
     if( !req.session.categories && !req.session.products){
@@ -135,7 +137,7 @@ router.put('/product/:id/edit', verifyAdmin, (req, res)=>{
     let {id} = req.params
     
     db.query("UPDATE product SET title = ?, category_id=?, price=?, description=? WHERE id=?",
-    [title, category, price, description, id], (err, result)=>{
+    [title, category, parseInt(price), description, parseInt(id)], (err, result)=>{
         if(err) return res.send("product didn't update!")
         let pics = []
         if (!!req.files) {
@@ -167,15 +169,28 @@ router.put('/product/:id/edit', verifyAdmin, (req, res)=>{
 
 router.delete('/categ/delete/:id', verifyAdmin, (req, res)=>{
     let {id} = req.params;
-    console.log(id)
+    let {products} = req.session;
     db.query("DELETE FROM product WHERE category_id = (?)", [id], (err, result)=>{
         if(err) res.send("couldn't delete products")
         else{
-        console.log(result)
-        // db.query("DELETE FROM category WHERE id = (?)", [id], (err, result)=>{
-        //     if(err) res.send("couldn't delete category")
+        for(let i in products){
+            if(products[i].category_id === id){
+                // fs.rm(`${__dirname}../public/upload/${id}`, { recursive: true, force: true }, err=>{
+                //     if (err) throw err;
+                //     console.log('product prics deleted')
+                // });
+                rimraf(`${__dirname}/../public/upload/${id}`, function () { console.log('product prics deleted'); });
+            }
+        }
+        db.query("DELETE FROM category WHERE id = (?)", [id], (err, result)=>{
+            if(err) res.send("couldn't delete category")
+            const newCategsArray = req.session.categories.filter(function (categ) {
+                return categ.id = id;
+
+            });
+            req.session.categories = newCategsArray;
             res.redirect('/admin')
-        // })
+        })
     }
     })
 })
