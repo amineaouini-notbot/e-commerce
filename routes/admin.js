@@ -209,12 +209,13 @@ router.delete('/delete/prod/:id', (req, res)=>{
             let {products} = req.session
             let currentProducts = []
             for(let i in products){
-                if (products[i].id !== id){
+                console.log()
+                if (products[i].id !== parseInt(id)){
                     currentProducts.push(products[i]);
                 }
             }
             req.session.products = currentProducts
-            console.log(req.session.products)
+            console.log(id ,currentProducts)
             res.redirect('/admin')
         }
     })
