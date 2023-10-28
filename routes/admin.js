@@ -170,40 +170,37 @@ router.put('/product/:id/edit', verifyAdmin, (req, res)=>{
 router.delete('/categ/delete/:id', verifyAdmin, (req, res)=>{
     let {id} = req.params;
     let {products} = req.session;
-    // db.query("DELETE FROM product WHERE category_id = (?)", [id], (err, result)=>{
-    //     if(err) res.send("couldn't delete products")
-    //     else{
+    db.query("DELETE FROM product WHERE category_id = (?)", [id], (err, result)=>{
+        if(err) res.send("couldn't delete products")
+        else{
             let currentProducts = []
+            console.log(products[0].category_id, id)
             for(let i in products){
                 if(products[i].category_id === parseInt(id)){
                     fs.rm(path.join(__dirname, '..', 'public', 'upload', ''+products[i].id), { recursive: true, force: true }, err=>{
-                        if (err) throw err;
+                        if (err) res.send("couldn't delete product pics");
                         console.log(products[i].id + '=> product prics deleted')
                     }) 
                     
                 }
-                else if(products[i].category_id !== parseInt(id)){
-
-                    currentProducts.push(products[i]);
-                }
+                else if(products[i].category_id !== parseInt(id)){ currentProducts.push(products[i]) }
             
-            
-            
-            req.session.products = currentProducts
-    //     }
-        // db.query("DELETE FROM category WHERE id = (?)", [id], (err, result)=>{
-            // if(err) {res.send("couldn't delete category")} 
-            // else{
-            let currentCategs = [];
-            let {categories} = req.session
-            for(let i in categories){
-                if(categories[i].id !== parseInt(id)) currentCategs.push(categories[i]);
             }
-            req.session.categories = currentCategs;
-            res.redirect('/admin')}
-        // })
-    // }
-    // })
+            req.session.products = currentProducts
+            db.query("DELETE FROM category WHERE id = (?)", [id], (err, result)=>{
+                if(err) {res.send("couldn't delete category")} 
+                else{
+                let currentCategs = [];
+                let {categories} = req.session
+                for(let i in categories){
+                    if(categories[i].id !== parseInt(id)) currentCategs.push(categories[i]);
+                }
+                req.session.categories = currentCategs;
+                res.redirect('/admin')
+                }
+            })
+        }
+    })
 })
 
 router.delete('/delete/prod/:id', (req, res)=>{
