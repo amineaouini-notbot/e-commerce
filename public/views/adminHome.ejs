@@ -41,6 +41,9 @@
                             <div><%= product.title %></div>
                             <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="image not found" style="width: 150px;"/>
                             <a href="/admin/product/<%=product.id%>/edit">edit</a>
+                            <form action="/admin/delete/prod/<%=product.id%>?_method=delete" method="post">
+                                <button type="submit">delete</button>
+                            </form>
                         </div>
                         <% if (product.id % 4 === 0) {%>
                               <div class="w-100"></div>
