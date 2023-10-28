@@ -175,23 +175,39 @@ router.delete('/categ/delete/:id', verifyAdmin, (req, res)=>{
         else{
         for(let i in products){
             if(products[i].category_id === id){
-                // fs.rm(`${__dirname}../public/upload/${id}`, { recursive: true, force: true }, err=>{
-                //     if (err) throw err;
-                //     console.log('product prics deleted')
-                // });
-                rimraf(`${__dirname}/../public/upload/${id}`, function () { console.log('product prics deleted'); });
+                fs.rm(`${__dirname}../public/upload/${products[i].id}`, { recursive: true, force: true }, err=>{
+                    if (err) throw err;
+                    console.log('product prics deleted')
+                });
+                // rimraf(`${__dirname}/../public/upload/${products[i].id}`, () =>{ console.log('product prics deleted'); });
             }
         }
         db.query("DELETE FROM category WHERE id = (?)", [id], (err, result)=>{
             if(err) res.send("couldn't delete category")
-            const newCategsArray = req.session.categories.filter(function (categ) {
+            req.session.categories = req.session.categories.filter(function (categ) {
                 return categ.id = id;
 
             });
-            req.session.categories = newCategsArray;
+            
             res.redirect('/admin')
         })
     }
+    })
+})
+
+router.delete('/delete/prod/:id', (req, res)=>{
+    let {id} = req.params;
+    db.query('DELETE FROM product WHERE id = (?)', [id], (err, result)=>{
+        if (err) res.send('coulnt delete prod!')
+        else{
+            
+            fs.rm(`${__dirname}../public/upload/${id}`, { recursive: true, force: true }, err=>{
+                if (err) throw err;
+                console.log('product prics deleted')
+            });
+            req.session.products = req.session.products.filter(product=>product.id !== id)
+            res.redirect('/admin')
+        }
     })
 })
 module.exports = router
