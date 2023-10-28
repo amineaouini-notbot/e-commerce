@@ -4,8 +4,8 @@ const db = require('../db/db')
 const jwt = require("jsonwebtoken");
 const verifyAdmin = require('./verifyAdmin');
 const fs = require('fs');
-var {rimraf} = require("rimraf");
-const { parse } = require('path');
+const path = require('path');
+
 
 router.get('/', verifyAdmin, (req, res)=>{
     if( !req.session.categories && !req.session.products){
@@ -200,12 +200,21 @@ router.delete('/delete/prod/:id', (req, res)=>{
     db.query('DELETE FROM product WHERE id = (?)', [id], (err, result)=>{
         if (err) res.send('coulnt delete prod!')
         else{
-            
-            fs.rm(`${__dirname}../public/upload/${id}`, { recursive: true, force: true }, err=>{
+                
+
+            fs.rm(path.join(__dirname, '..', 'public', 'upload', ''+id), { recursive: true, force: true }, err=>{
                 if (err) throw err;
-                console.log('product prics deleted')
+                console.log(id + '=> product prics deleted')
             });
-            req.session.products = req.session.products.filter(product=>product.id !== id)
+            let {products} = req.session
+            let currentProducts = []
+            for(let i in products){
+                if (products[i].id !== id){
+                    currentProducts.push(products[i]);
+                }
+            }
+            req.session.products = currentProducts
+            console.log(req.session.products)
             res.redirect('/admin')
         }
     })
