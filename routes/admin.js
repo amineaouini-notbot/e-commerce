@@ -217,7 +217,7 @@ router.delete('/delete/prod/:id', (req, res)=>{
         else{
                 
 
-            fs.rm(path.join(__dirname, '..', 'public', 'upload', ''+id), { recursive: true, force: true }, err=>{
+            fs.rm(path.join(__dirname, '..', 'public', 'upload', id), { recursive: true, force: true }, err=>{
                 if (err) throw err;
                 console.log(id + '=> product prics deleted')
             });
@@ -232,6 +232,31 @@ router.delete('/delete/prod/:id', (req, res)=>{
             req.session.products = currentProducts
             console.log(id ,currentProducts)
             res.redirect('/admin')
+        }
+    })
+})
+
+router.delete('/delete/product/:id/image/:image', verifyAdmin, (req, res)=>{
+    let {id, image} = req.params;
+    console.log(image)
+    let images = []
+    fs.unlink(path.join(__dirname, "..", 'public', 'upload', id, image), err=>{
+        if (err) res.send("couldn't delete image")
+        else {
+            let products = req.session.products; 
+            for(let i in products){
+                if (parseInt(products[i].id) === parseInt(id)){
+                    for(let j in products[i].images){
+                        if(products[i].images[j] !== image){
+                            images.push(products[i].images[j])
+                        }
+                    }
+                    products[i].images = images;
+                    console.log(products[i])
+                    break;
+                }
+            }            
+            res.redirect(`/admin/product/${id}/edit`)
         }
     })
 })
