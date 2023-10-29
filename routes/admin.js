@@ -122,8 +122,9 @@ router.get('/product/:id/edit', verifyAdmin, (req, res)=>{
     const {id} = req.params
     req.session.editProd = id;
     const {categories, products} = req.session;
+    console.log(id === products[0].id, id, products[0].id)
     for(let i in products){
-        if(products[i].id = id) {
+        if(parseInt(products[i].id) === parseInt(id)) {
             res.render('editProd', {categories, product: products[i]})
             return;
         }
@@ -137,7 +138,7 @@ router.put('/product/:id/edit', verifyAdmin, (req, res)=>{
     let {id} = req.params
     
     db.query("UPDATE product SET title = ?, category_id=?, price=?, description=? WHERE id=?",
-    [title, category, parseInt(price), description, parseInt(id)], (err, result)=>{
+    [title, parseInt(category), parseInt(price), description, parseInt(id)], (err, result)=>{
         if(err) return res.send("product didn't update!")
         let pics = []
         if (!!req.files) {
@@ -147,23 +148,29 @@ router.put('/product/:id/edit', verifyAdmin, (req, res)=>{
             if(Array.isArray(image)){
 
                 for(let i in image){
-                image[i].mv(`${__dirname}/../public/upload/${id}/${image[i].name}`);
+                    image[i].mv(`${__dirname}/../public/upload/${id}/${image[i].name}`);
+                    pics.push(image[i].name)
                 }
-            } else image.mv(`${__dirname}/../public/upload/${id}/${image.name}`);
+            } else {
+                image.mv(`${__dirname}/../public/upload/${id}/${image.name}`);
+                pics.push(image.name)
+            }
             
 
         }
         for(let i in req.session.products){
-            if (req.session.products[i].id === id){
-
+            if (parseInt(req.session.products[i].id) === parseInt(id)){
+                console.log(req.session.products[i])
+                console.log(id)
                 req.session.products[i] = {id, title, category_id: category, price, description,
                 images: [...req.session.products[i].images, ...pics]}
-                    res.redirect('/admin')
-                    return
+                console.log(req.session.products[i])
+                break;
             }
-            }
-            
-        })
+        }
+        console.log()
+        res.redirect('/admin')
+    })
 
 })
 
