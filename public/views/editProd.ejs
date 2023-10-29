@@ -45,11 +45,15 @@
 
                 <label for="">Upload Image</label>
                 <input id="input-img"  type="file" name="image" class="form-control mb-4" style="width: 400px;" multiple>
-                <div class="row">
+                <div id="images" style="display: flex;">
                     <% product.images.forEach(image => {%>
-
-                        <img src="/upload/<%= product.id %>/<%= image %>" alt="img isn't uploaded yet" style="width: 200px;">
-
+                        
+                            <div style="margin-right: 15px;">
+                                <form action="/admin/delete/product/<%=product.id%>/image/<%=image%>?_method=delete" method="post">
+                                    <button type="submit">delete</button>
+                                </form>
+                                <img src="/upload/<%= product.id %>/<%= image %>" alt="img isn't uploaded yet" style="width: 200px;">
+                            </div>
                     <%}) %>
 
                 </div>
