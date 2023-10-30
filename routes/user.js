@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const db = require('../db/db')
 const jwt = require('jsonwebtoken')
 const verifyToken = require('./verifyToken')
+const fs = require('fs')
 
 router.get('/signup', (req, res)=>{
     if (req.session.token) res.redirect('/user');
@@ -40,19 +41,53 @@ router.get('/login', (req, res)=>{
 
 router.post('/login', (req, res)=>{
     db.query("SELECT * FROM client WHERE email = ?", req.body.email, function (err, result) {
-        if (err) throw err;
-        console.log(result[0]);
-        let privateKey = process.env.TOKEN_PASS;
-        let token = jwt.sign({ _id: result[0].id }, privateKey);
-        req.session.token = token
-        res.redirect(`/user`)
+        if (err) {
+            res.send("couldn't login!");
+            return
+        } else if(!result[0]){
+            res.redirect('/user/login')
+            return
+        } else {
+
+            console.log(result[0]);
+            
+            let privateKey = process.env.TOKEN_PASS;
+            let token = jwt.sign({ _id: result[0].id }, privateKey);
+            req.session.token = token
+            res.redirect(`/user`)
+        }
       });
 
 })
 
 router.get('/', verifyToken, (req, res)=>{
-    let { token } = req.session
-    if (!token) res.redirect("/")
-    else res.send('logged in with ->' + token)
+    if( !req.session.categories && !req.session.products){
+        db.query('SELECT * from category', (err, result)=>{
+            if (err) {res.send('problem accured!')}
+            else {
+                // console.log(result)
+                req.session.categories = result;
+                db.query('SELECT * from product', (err, result)=>{
+                    if (err) {res.send('problem accured!')}
+                    else {
+                        if(!!result[0]){
+                        for(let i in result){
+                            const fileList = fs.readdirSync(__dirname+'/../public/upload/' + result[i].id)
+                            result[i].images = fileList; 
+                            
+                        }}
+                        req.session.products = result;
+                        res.render('userHome', {categories: req.session.categories, products: result})
+                    }
+                })
+                
+            }
+        })
+    
+    } else {
+        let {categories, products} = req.session              
+        res.render('userHome', {categories, products })
+
+    }
 })
 module.exports = router;
