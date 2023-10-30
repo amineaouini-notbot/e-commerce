@@ -136,13 +136,11 @@ router.get('/product/:id/edit', verifyAdmin, (req, res)=>{
 router.put('/product/:id/edit', verifyAdmin, (req, res)=>{
     let {title, category, price, description} = req.body
     let {id} = req.params
-    
     db.query("UPDATE product SET title = ?, category_id=?, price=?, description=? WHERE id=?",
     [title, parseInt(category), parseInt(price), description, parseInt(id)], (err, result)=>{
         if(err) return res.send("product didn't update!")
         let pics = []
         if (!!req.files) {
-            
             let {image} = req.files;
             
             if(Array.isArray(image)){
@@ -160,15 +158,11 @@ router.put('/product/:id/edit', verifyAdmin, (req, res)=>{
         }
         for(let i in req.session.products){
             if (parseInt(req.session.products[i].id) === parseInt(id)){
-                console.log(req.session.products[i])
-                console.log(id)
                 req.session.products[i] = {id, title, category_id: category, price, description,
                 images: [...req.session.products[i].images, ...pics]}
-                console.log(req.session.products[i])
                 break;
             }
         }
-        console.log()
         res.redirect('/admin')
     })
 
@@ -181,7 +175,6 @@ router.delete('/categ/delete/:id', verifyAdmin, (req, res)=>{
         if(err) res.send("couldn't delete products")
         else{
             let currentProducts = []
-            console.log(products[0].category_id, id)
             for(let i in products){
                 if(products[i].category_id === parseInt(id)){
                     fs.rm(path.join(__dirname, '..', 'public', 'upload', ''+products[i].id), { recursive: true, force: true }, err=>{
@@ -230,7 +223,6 @@ router.delete('/delete/prod/:id', (req, res)=>{
                 }
             }
             req.session.products = currentProducts
-            console.log(id ,currentProducts)
             res.redirect('/admin')
         }
     })
@@ -238,7 +230,6 @@ router.delete('/delete/prod/:id', (req, res)=>{
 
 router.delete('/delete/product/:id/image/:image', verifyAdmin, (req, res)=>{
     let {id, image} = req.params;
-    console.log(image)
     let images = []
     fs.unlink(path.join(__dirname, "..", 'public', 'upload', id, image), err=>{
         if (err) res.send("couldn't delete image")
@@ -251,8 +242,7 @@ router.delete('/delete/product/:id/image/:image', verifyAdmin, (req, res)=>{
                             images.push(products[i].images[j])
                         }
                     }
-                    products[i].images = images;
-                    console.log(products[i])
+                    req.session.products[i].images = images;
                     break;
                 }
             }            
