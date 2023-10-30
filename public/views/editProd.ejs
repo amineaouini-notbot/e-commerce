@@ -10,8 +10,17 @@
         $( document ).ready(function() {
         //    $('#form2 :input').not(':submit').clone().hide().appendTo('#form1');
             $('#input-img').change(()=>{
-                console.log(11)
                 $('#input-img').clone().hide().appendTo('#form-main');
+                const files = document.querySelector('#input-img').files
+                for(let i in files){
+
+                    $(`
+                    <div style="margin-right: 15px;">
+                        
+                        <img src="${URL.createObjectURL(files[i])}" alt="img isn't uploaded yet" style="width: 200px;">
+                    </div>
+                    `).appendTo('#images')
+                }
             })
         });
     </script>
