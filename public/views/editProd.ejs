@@ -53,7 +53,7 @@
                     <label for="category" class="mb-4">category:</label>
                     <select name="category" id="select-categ" class="form-select form-select-padding-y-lg" aria-label="Default select example">
                         <% categories.forEach(categ => { %>
-                            <% if(categ.id === product.category_id) { %>
+                            <% if(parseInt(categ.id) === parseInt(product.category_id)) { %>
                                 <option value="<%= categ.id %>" selected><%= categ.title %></option>
                         
                             <%} else {%>
