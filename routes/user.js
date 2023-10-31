@@ -21,12 +21,22 @@ router.post('/signup', (req, res)=>{
             (err, result)=>{
                 if (err) {res.redirect('/signup')}
                 else {
+                    let client_id = result.insertId
+                    db.query('INSERT INTO cart (client_id, created_at) VALUES (?, ?)',
+                    [result.insertId, new Date()],
+                    (err, result)=>{
+                        if(err) {res.redirect('/signup')}
+                        else{
 
+                            let privateKey = process.env.TOKEN_PASS;
+                            let token = jwt.sign({ _id: client_id }, privateKey);
+                            req.session.token = token
+                            req.session.cart_id = result.insertId
+                            res.redirect(`/user`)
+                        }
+
+                    })
                     // console.log(result.insertId)
-                    let privateKey = process.env.TOKEN_PASS;
-                    let token = jwt.sign({ _id: result.insertId }, privateKey);
-                    req.session.token = token
-                    res.redirect(`/user`)
                 }
             })
     }) 
