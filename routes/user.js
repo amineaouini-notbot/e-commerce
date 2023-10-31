@@ -27,7 +27,6 @@ router.post('/signup', (req, res)=>{
                     (err, result)=>{
                         if(err) {res.redirect('/signup')}
                         else{
-
                             let privateKey = process.env.TOKEN_PASS;
                             let token = jwt.sign({ _id: client_id }, privateKey);
                             req.session.token = token
@@ -58,13 +57,17 @@ router.post('/login', (req, res)=>{
             res.redirect('/user/login')
             return
         } else {
+            let client = result[0]
+            bcrypt.compare(req.body.password, client.password, function(err, result) {
+                if(err) res.send("couldn't check password")
+                else if(result){
 
-            console.log(result[0]);
-            
-            let privateKey = process.env.TOKEN_PASS;
-            let token = jwt.sign({ _id: result[0].id }, privateKey);
-            req.session.token = token
-            res.redirect(`/user`)
+                    let privateKey = process.env.TOKEN_PASS;
+                    let token = jwt.sign({ _id: client.id }, privateKey);
+                    req.session.token = token
+                    res.redirect('/user')
+                } else res.redirect('/user/signup')
+            });
         }
       });
 
