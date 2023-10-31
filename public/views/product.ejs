@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h1><%= product.title %></h1>
+
+        <h3><%= product.price %> - USD</h3>
+        <form action="/addtoCart/<%=product.id%>" method="post">
+            <input class="products-quantity" id="product-quantity-<%=product.id%>" name="quantity" type="number" value="1" style="width: 50px;">
+            <button type="submit">Add to Cart</button>
+        </form>
+        <div style="display: flex; margin-bottom: 50px;">
+            <% product.images.forEach(image => {%>
+                <div style="margin-right: 20px;">
+                    <img src="/upload/<%= product.id %>/<%= image %>" alt="" style="height: 100px;">
+                </div>
+                
+            <%})%>
+        </div>
+        
+        <div>
+            <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="" style="" height="400px">
+        </div>
+
+        
+    </div>
+</body>
+</html>
