@@ -121,9 +121,20 @@ router.get('/checkout', verifyToken, (req, res)=>{
                 if(err) res.send("couldn't retreive cart items!!")
                 else{
                     console.log(result)
+                    if(!!result[0]){
+                        let total = 0;
+                        let items = result;
+                        for(let i in items){
+                            console.log(items[i])
+                            const imagesList = fs.readdirSync(__dirname+'/../public/upload/' + items[i].product_id)
+                            items[i].image = imagesList[0];
+                            total += items[i].price
+                        }
+
+                        res.render('checkout', {items, total})
+                    } else res.redirect('/user')
                 }
             })
-    res.send('hhhhhuser')
 })
 
 router.use('/products' , require('./user/products')) 

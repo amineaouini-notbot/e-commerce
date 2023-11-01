@@ -14,16 +14,32 @@
             </div>
             <div class="col col-lg-10" >
                 <ul class="list-group">
-
+                    <li class="list-group-item">
+                        <div class="row">
+                            <p class="col col-lg-3">Image</p>
+                            <p class="col col-lg-3">Title</p>
+                            <p class="col col-lg-2">Price</p>
+                        </div>
+                    </li>
                     <% items.forEach(item =>{%>
                         <li class="list-group-item">
                             <div class="row">
-                                
+                                <div class="col col-lg-3">
+
+                                    <img src="/upload/<%= item.product_id%>/<%= item.image%>" alt="" style="height: 60px;">
+                                </div>
                                 <p class="col col-lg-3"><%= item.title %></p>
                                 <p class="col col-lg-2"><%= item.price %></p>
                             </div>
                         </li>
                     <%})%>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col col-lg-3"></div>
+                            <p class="col col-lg-3">Total :</p>
+                            <p id="total" class="col col-lg-2"><%= total %></p>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
