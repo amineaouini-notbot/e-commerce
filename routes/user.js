@@ -30,7 +30,7 @@ router.post('/signup', (req, res)=>{
                             let privateKey = process.env.TOKEN_PASS;
                             let token = jwt.sign({ _id: client_id }, privateKey);
                             req.session.token = token
-                            req.session.cart_id = result.insertId
+                            req.session.cart = {id: result.insertId}
                             res.redirect(`/user`)
                         }
 
@@ -108,6 +108,22 @@ router.get('/', verifyToken, (req, res)=>{
         res.render('userHome', {categories, products, cart })
 
     }
+})
+
+router.get('/checkout', verifyToken, (req, res)=>{
+    let {cart } = req.session
+    let {_id } = req.user
+    console.log(cart, "<== cart!!")
+    db.query(`SELECT cart_items.id, product.id AS product_id, product.title, product.price 
+            FROM cart_items LEFT JOIN product
+            ON cart_items.product_id = product.id WHERE cart_items.cart_id = (?)`, [cart.id],
+            (err, result)=>{
+                if(err) res.send("couldn't retreive cart items!!")
+                else{
+                    console.log(result)
+                }
+            })
+    res.send('hhhhhuser')
 })
 
 router.use('/products' , require('./user/products')) 

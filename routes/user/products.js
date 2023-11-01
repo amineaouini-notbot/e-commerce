@@ -39,13 +39,12 @@ router.get('/:id', verifyToken, (req, res)=>{
 })
 
 router.post('/addtoCart', verifyToken, (req, res)=>{
-    console.log(req.body, req.user._id)
     let {product_id, cart_id} = req.body
     db.query('INSERT INTO cart_items (cart_id, product_id, created_at) VALUES (?, ?, ?)', [cart_id, product_id, new Date()],
     (err, result)=>{
         if(err) res.send("couldn't add products into cart!!")
         else {
-            
+            console.log('product added into cart!')
             res.redirect('/user')
         }
     })
