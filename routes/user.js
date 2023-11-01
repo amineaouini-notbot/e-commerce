@@ -68,7 +68,7 @@ router.post('/login', (req, res)=>{
                             let token = jwt.sign({ _id: client.id }, privateKey);
                             req.session.token = token
                             req.session.cart = result[result.length-1]; 
-                            res.redirect('/user')
+                            res.redirect('/user/')
                         }
                     })
                 } else res.redirect('/user/signup')
@@ -79,6 +79,7 @@ router.post('/login', (req, res)=>{
 })
 
 router.get('/', verifyToken, (req, res)=>{
+    let {cart} = req.session
     if( !req.session.categories && !req.session.products){
         db.query('SELECT * from category', (err, result)=>{
             if (err) {res.send('problem accured!')}
@@ -95,7 +96,7 @@ router.get('/', verifyToken, (req, res)=>{
                             
                         }}
                         req.session.products = result;
-                        res.render('userHome', {categories: req.session.categories, products: result})
+                        res.render('userHome', {categories: req.session.categories, products: result, cart})
                     }
                 })
                 
@@ -104,7 +105,7 @@ router.get('/', verifyToken, (req, res)=>{
     
     } else {
         let {categories, products} = req.session              
-        res.render('userHome', {categories, products })
+        res.render('userHome', {categories, products, cart })
 
     }
 })

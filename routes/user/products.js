@@ -35,4 +35,9 @@ router.get('/:id', verifyToken, (req, res)=>{
     }
     
 })
+
+router.post('/addtoCart', verifyToken, (req, res)=>{
+    console.log(req.body)
+    res.redirect('/user')
+})
 module.exports = router
