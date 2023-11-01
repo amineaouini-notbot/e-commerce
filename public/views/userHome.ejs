@@ -12,11 +12,11 @@
             <div class="col col-lg-2">
                 <h5>Categories:</h5>
                 <ul class="list-group-item list-group-item-action">
-                    <li class="list-group-item list-group-item-action list-group-item-dark">All</li>
+                    <li class="list-group-item list-group-item-action list-group-item-dark"><a href="/user">All</a></li>
                     <% categories.forEach(function(category) { %>
                         <li class="list-group-item list-group-item-action list-group-item-primary" >
                             <div style="display:flex; justify-content:space-between;">
-                                <a href="/user/bycateg/<%=category.id%>"><%= category.title %></a>
+                                <a href="/user/products/byCateg/<%=category.id%>"><%= category.title %></a>
                                 
                             </div>
                             

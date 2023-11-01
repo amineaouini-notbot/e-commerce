@@ -19,7 +19,7 @@
             <div class="col col-lg-2">
                 <h5>Categories:</h5>
                 <ul class="list-group-item list-group-item-action">
-                    <li class="list-group-item list-group-item-action list-group-item-dark">All</li>
+                    <li class="list-group-item list-group-item-action list-group-item-dark"><a href="/user">All</a></li>
                     <% categories.forEach(function(category) { %>
                         <li class="list-group-item list-group-item-action list-group-item-primary" >
                             <div style="display:flex; justify-content:space-between;">
@@ -41,8 +41,9 @@
                             <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="image not found" style="width: 150px;"/>
                             <div><%= product.title %></div>
                             <p><%=product.price%> - USD</p> <a href="/user/products/<%=product.id%>">show case</a>
-                            <form action="/addtoCart/<%=product.id%>" method="post">
-                                <input class="products-quantity" id="product-quantity-<%=product.id%>" name="quantity" type="number" value="1" style="width: 30px;">
+                            <form action="/user/products/addtoCart" method="post">
+                                <input type="number" name="product_id" value="<%=product.id%>" hidden>
+                                <input type="number" name="cart_id" value="<%=cart.id%>" hidden>
                                 <button type="submit">Add to Cart</button>
                             </form>
                         </div>

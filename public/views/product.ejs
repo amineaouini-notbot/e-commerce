@@ -10,8 +10,9 @@
         <h1><%= product.title %></h1>
 
         <h3><%= product.price %> - USD</h3>
-        <form action="/addtoCart/<%=product.id%>" method="post" style="margin-bottom: 30px;">
-            <input class="products-quantity" id="product-quantity-<%=product.id%>" name="quantity" type="number" value="1" style="width: 50px;">
+        <form action="/user/products/addtoCart" method="post">
+            <input type="number" name="product_id" value="<%=product.id%>" hidden>
+            <input type="number" name="cart_id" value="<%=cart.id%>" hidden>
             <button type="submit">Add to Cart</button>
         </form>
         <div style="display: flex; margin-bottom: 50px;">
