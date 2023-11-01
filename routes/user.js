@@ -61,11 +61,16 @@ router.post('/login', (req, res)=>{
             bcrypt.compare(req.body.password, client.password, function(err, result) {
                 if(err) res.send("couldn't check password")
                 else if(result){
-
-                    let privateKey = process.env.TOKEN_PASS;
-                    let token = jwt.sign({ _id: client.id }, privateKey);
-                    req.session.token = token
-                    res.redirect('/user')
+                    db.query("SELECT id, created_at FROM cart WHERE client_id = (?)", [client.id], (err, result)=>{
+                        if(err) res.send("couldn't retrieve carts")
+                        else {
+                            let privateKey = process.env.TOKEN_PASS;
+                            let token = jwt.sign({ _id: client.id }, privateKey);
+                            req.session.token = token
+                            req.session.cart = result[result.length-1]; 
+                            res.redirect('/user')
+                        }
+                    })
                 } else res.redirect('/user/signup')
             });
         }
