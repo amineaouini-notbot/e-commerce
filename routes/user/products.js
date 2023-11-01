@@ -4,6 +4,7 @@ const verifyToken = require('../verifyToken')
 const fs = require('fs')
 
 router.get("/byCateg/:id", verifyToken, (req, res)=>{
+    let {cart} = req.session
     if(!req.session.categories && !req.session.products) res.redirect('/user')
     else{
         let {id} = req.params;
@@ -13,11 +14,12 @@ router.get("/byCateg/:id", verifyToken, (req, res)=>{
         for(let i in products){
             if(parseInt(products[i].category_id) === parseInt(id)) byCateg.push(products[i])
         }
-        res.render('byCateg', {categories, products: byCateg});
+        res.render('byCateg', {categories, products: byCateg, cart});
     }
 })
 
 router.get('/:id', verifyToken, (req, res)=>{
+    let {cart} = req.session
     if(!req.session.categories && !req.session.products) res.redirect('/user')
     else {
         let {id} = req.params
@@ -28,7 +30,7 @@ router.get('/:id', verifyToken, (req, res)=>{
                     let product = result[0]
                     const imagesList = fs.readdirSync(__dirname+'/../../public/upload/' + id)
                     product.images = imagesList
-                    res.render('product', {product})
+                    res.render('product', {product, cart})
                 }
             }
         })
@@ -37,7 +39,15 @@ router.get('/:id', verifyToken, (req, res)=>{
 })
 
 router.post('/addtoCart', verifyToken, (req, res)=>{
-    console.log(req.body)
-    res.redirect('/user')
+    console.log(req.body, req.user._id)
+    let {product_id, cart_id} = req.body
+    db.query('INSERT INTO cart_items (cart_id, product_id, created_at) VALUES (?, ?, ?)', [cart_id, product_id, new Date()],
+    (err, result)=>{
+        if(err) res.send("couldn't add products into cart!!")
+        else {
+            
+            res.redirect('/user')
+        }
+    })
 })
 module.exports = router
