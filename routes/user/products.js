@@ -52,7 +52,7 @@ router.post('/addtoCart', verifyToken, (req, res)=>{
 
 router.delete('/removeFromCart/:id', verifyToken, (req, res)=>{
     let {id} = req.params;
-    db.query("DELETE FROM todos WHERE id = (?)", [id], (err, result)=>{
+    db.query("DELETE FROM cart_items WHERE id = (?)", [id], (err, result)=>{
         if(err) res.send("couldn't delete cart item!!")
         else {
             res.redirect('/user/checkout')
