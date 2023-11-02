@@ -30,6 +30,12 @@
                                 </div>
                                 <p class="col col-lg-3"><%= item.title %></p>
                                 <p class="col col-lg-2"><%= item.price %></p>
+                                <div class="col col-lg-3">
+
+                                    <form action="/user/products/removeFromCart/<%=item.id%>?_method=DELETE" method="post">
+                                        <button type="submit" class="btn btn-danget">Delete</button>
+                                    </form>
+                                </div>
                             </div>
                         </li>
                     <%})%>
