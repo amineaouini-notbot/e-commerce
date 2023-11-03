@@ -148,20 +148,52 @@ router.get('/checkout', verifyToken, (req, res)=>{
             })
 })
 
-router.post('/checkout', verifyToken, (req, res)=>{
+router.post('/checkout', verifyToken, async (req, res)=>{
     let cart_id = req.session.cart.id
     db.query(`SELECT cart_items.id AS item_id, product.id, product.title, product.price 
     FROM cart_items LEFT JOIN product
     ON cart_items.product_id = product.id WHERE cart_items.cart_id = (?)`, [cart_id],
-    (err, result)=>{
+    async (err, result)=>{
         if(err) res.send("error accured at checkout!!")
         else {
-            
-            // console.log(total)
-            res.redirect('/user/checkout')
-        }
-    })
-    // res.send({id: cart_id})
+            const request = new paypal.orders.OrdersCreateRequest()
+            let total = result.reduce((sum, item)=>sum + item.price, 0)
+            request.prefer("return=representation")
+            request.requestBody({
+                intent: 'CAPTURE',
+                purchase_units: [
+                    {
+                        amount: {
+                            currency_code: "USD",
+                            value: total,
+                            breakdown: {
+                                item_total: {
+                                    currency_code: 'USD',
+                                    value: total
+                                }
+                            }
+                        },
+                        items: result.map(item => {
+                            return {
+                                name: item.title,
+                                unite_amount: {
+                                    currency_code: 'USD',
+                                    value: item.price
+                                },
+                                quantity: 1
+                            }
+                        })
+                    }
+                ] 
+            })
+            try {
+                const order = await paypalClient.execute(request)
+                res.json({id: order.result.id})
+            } catch(err) {
+                res.status(500).json({error: err.message});
+            }
+            }
+        })
 })
 
 router.use('/products' , require('./user/products')) 
