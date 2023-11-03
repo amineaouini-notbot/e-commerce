@@ -110,31 +110,45 @@ router.get('/', verifyToken, (req, res)=>{
     }
 })
 
+let {PAYPAL_CLIENT_ID} = process.env
+
 router.get('/checkout', verifyToken, (req, res)=>{
     let {cart } = req.session
     let {_id } = req.user
-    console.log(cart, "<== cart!!")
     db.query(`SELECT cart_items.id, product.id AS product_id, product.title, product.price 
             FROM cart_items LEFT JOIN product
             ON cart_items.product_id = product.id WHERE cart_items.cart_id = (?)`, [cart.id],
             (err, result)=>{
                 if(err) res.send("couldn't retreive cart items!!")
                 else{
-                    console.log(result)
                     if(!!result[0]){
                         let total = 0;
                         let items = result;
                         for(let i in items){
-                            console.log(items[i])
                             const imagesList = fs.readdirSync(__dirname+'/../public/upload/' + items[i].product_id)
                             items[i].image = imagesList[0];
                             total += items[i].price
                         }
 
-                        res.render('checkout', {items, total})
+                        res.render('checkout', {items, total, paypalClientId: PAYPAL_CLIENT_ID})
                     } else res.redirect('/user')
                 }
             })
+})
+
+router.post('/checkout', verifyToken, (req, res)=>{
+    let cart_id = req.session.cart.id
+    db.query(`SELECT cart_items.id AS item_id, product.id, product.title, product.price 
+    FROM cart_items LEFT JOIN product
+    ON cart_items.product_id = product.id WHERE cart_items.cart_id = (?)`, [cart_id],
+    (err, result)=>{
+        if(err) res.send("error accured at checkout!!")
+        else {
+            console.log(result)
+            res.redirect('/user/checkout')
+        }
+    })
+    // res.send({id: cart_id})
 })
 
 router.use('/products' , require('./user/products')) 
