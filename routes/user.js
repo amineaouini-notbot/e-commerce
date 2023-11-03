@@ -4,6 +4,18 @@ const db = require('../db/db')
 const jwt = require('jsonwebtoken')
 const verifyToken = require('./verifyToken')
 const fs = require('fs')
+const paypal = require('@paypal/checkout-server-sdk')
+
+const env = process.env.NODE_ENV
+const Environment = env === 'production' 
+? paypal.core.LiveEnvironment
+: paypal.core.SandboxEnvironment
+const paypalClient = new paypal.core.PayPalHttpClient(
+    new Environment(
+        process.env.PAYPAL_CLIENT_ID,
+        process.env.PAYPAL_CLIENT_SECRET
+    )
+)
 
 router.get('/signup', (req, res)=>{
     if (req.session.token) res.redirect('/user');
@@ -144,7 +156,8 @@ router.post('/checkout', verifyToken, (req, res)=>{
     (err, result)=>{
         if(err) res.send("error accured at checkout!!")
         else {
-            console.log(result)
+            
+            // console.log(total)
             res.redirect('/user/checkout')
         }
     })
