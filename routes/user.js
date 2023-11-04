@@ -6,6 +6,8 @@ const verifyToken = require('./verifyToken')
 const fs = require('fs')
 const paypal = require('@paypal/checkout-server-sdk')
 
+require('dotenv').config()
+
 const env = process.env.NODE_ENV
 const Environment = env === 'production' 
 ? paypal.core.LiveEnvironment
@@ -122,11 +124,9 @@ router.get('/', verifyToken, (req, res)=>{
     }
 })
 
-let {PAYPAL_CLIENT_ID} = process.env
 
 router.get('/checkout', verifyToken, (req, res)=>{
     let {cart } = req.session
-    let {_id } = req.user
     db.query(`SELECT cart_items.id, product.id AS product_id, product.title, product.price 
             FROM cart_items LEFT JOIN product
             ON cart_items.product_id = product.id WHERE cart_items.cart_id = (?)`, [cart.id],
@@ -142,7 +142,7 @@ router.get('/checkout', verifyToken, (req, res)=>{
                             total += items[i].price
                         }
 
-                        res.render('checkout', {items, total, paypalClientId: PAYPAL_CLIENT_ID})
+                        res.render('checkout', {items, total, paypalClientId: process.env.PAYPAL_CLIENT_ID})
                     } else res.redirect('/user')
                 }
             })
@@ -158,6 +158,8 @@ router.post('/checkout', verifyToken, async (req, res)=>{
         else {
             const request = new paypal.orders.OrdersCreateRequest()
             let total = result.reduce((sum, item)=>sum + item.price, 0)
+            
+            // console.log(total, items)
             request.prefer("return=representation")
             request.requestBody({
                 intent: 'CAPTURE',
@@ -168,15 +170,16 @@ router.post('/checkout', verifyToken, async (req, res)=>{
                             value: total,
                             breakdown: {
                                 item_total: {
-                                    currency_code: 'USD',
-                                    value: total
+                                    value: total,
+                                    currency_code: 'USD'
                                 }
-                            }
+                            }                    
+                        
                         },
                         items: result.map(item => {
                             return {
                                 name: item.title,
-                                unite_amount: {
+                                unit_amount: {
                                     currency_code: 'USD',
                                     value: item.price
                                 },
@@ -184,7 +187,7 @@ router.post('/checkout', verifyToken, async (req, res)=>{
                             }
                         })
                     }
-                ] 
+                ]
             })
             try {
                 const order = await paypalClient.execute(request)
