@@ -1,6 +1,15 @@
 paypal 
     .Buttons({
         createOrder: (data, action)=>{
+            // return action.order.create({
+            //     purchase_units: [
+            //         {
+            //             amount: {
+            //                 value: 0.5
+            //             }
+            //         }
+            //     ]
+            // })
             return fetch('/user/checkout',{
               method: 'POST',
               headers: {
