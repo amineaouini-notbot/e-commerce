@@ -44,7 +44,7 @@ router.post('/signup', (req, res)=>{
                             let privateKey = process.env.TOKEN_PASS;
                             let token = jwt.sign({ _id: client_id }, privateKey);
                             req.session.token = token
-                            req.session.cart = {id: result.insertId}
+                            req.session.cart = {id: result.insertId, state: ''}
                             res.redirect(`/user`)
                         }
 
@@ -75,7 +75,7 @@ router.post('/login', (req, res)=>{
             bcrypt.compare(req.body.password, client.password, function(err, result) {
                 if(err) res.send("couldn't check password")
                 else if(result){
-                    db.query("SELECT id, created_at FROM cart WHERE client_id = (?)", [client.id], (err, result)=>{
+                    db.query("SELECT id, state, created_at FROM cart WHERE client_id = (?)", [client.id], (err, result)=>{
                         if(err) res.send("couldn't retrieve carts")
                         else {
                             let privateKey = process.env.TOKEN_PASS;
@@ -142,7 +142,7 @@ router.get('/checkout', verifyToken, (req, res)=>{
                             total += items[i].price
                         }
 
-                        res.render('checkout', {items, total, paypalClientId: process.env.PAYPAL_CLIENT_ID})
+                        res.render('checkout', {state: cart.state, items, total, paypalClientId: process.env.PAYPAL_CLIENT_ID})
                     } else res.redirect('/user')
                 }
             })
