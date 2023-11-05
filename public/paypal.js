@@ -31,5 +31,13 @@ paypal
                 alert('Transaction Completed by '
                 + detailes.payer.name.given_name)
             })
+            .then(()=>{
+                fetch('/user/products/checkedout', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            })
         }
     }).render('#paypal')
