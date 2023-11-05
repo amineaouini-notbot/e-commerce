@@ -59,4 +59,13 @@ router.delete('/removeFromCart/:id', verifyToken, (req, res)=>{
         }
     })
 })
+
+router.put('/checkedout', verifyToken, (req, res)=>{
+    let cart_id = req.session.cart.id
+    db.query("UPDATE cart set state = 'checked_out' WHERE id = (?)", [cart_id],
+                (err, result)=>{
+                    if(err) res.send("couldn't update cart state")
+                    res.status(200).send("cart state is updated")
+                })
+})
 module.exports = router
