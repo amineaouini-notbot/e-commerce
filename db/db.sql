@@ -35,6 +35,7 @@ CREATE TABLE cart(
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
     created_at DATETIME NOT NULL,
+    state varchar(30) default '',
     FOREIGN KEY (client_id) REFERENCES client(id)
 );
 
