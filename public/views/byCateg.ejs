@@ -15,8 +15,22 @@
 </head>
 <body>
     <div class="container">
+        <% if(!cart.id){ %>
+        <div style="text-align: center;">
+
+            <a href="/user/signup" style="margin-right: 20px;">Sign up</a>
+            <a href="/user/login">login</a>
+        </div>
+        <%} else {%>
+            <form action="/user/logout" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        <%}%>
         <div class="row">
             <div class="col col-lg-2">
+                <% if(cart.id){ %>
+                    <a href="/user/checkout">checkout</a>
+                <%}%>
                 <h5>Categories:</h5>
                 <ul class="list-group-item list-group-item-action">
                     <li class="list-group-item list-group-item-action list-group-item-dark"><a href="/">All</a></li>
@@ -28,7 +42,7 @@
                             </div>
                             
                         </li>
-                        <% }); %> 
+                    <% }); %> 
                     </ul>                    
                 </form>
             </div>
