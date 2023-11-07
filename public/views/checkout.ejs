@@ -57,11 +57,11 @@
                     </li>
                 </ul>
                 <div class="col col-lg-3">
-                    <% if(state !== 'checked_out') { %>
-                        <form action="/user/products/newCart" method="post">
-                            <button type="submit">Make New Cart +</button>
-                        </form>
-                    <%}%>
+                   
+                    <form action="/user/products/newCart" method="post">
+                        <button type="submit">Make New Cart +</button>
+                    </form>
+                
                 </div>
                 <% if(state !== 'checked_out') { %>
                 <div id="paypal" class="col col-lg-10"></div>

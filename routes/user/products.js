@@ -60,6 +60,19 @@ router.delete('/removeFromCart/:id', verifyToken, (req, res)=>{
     })
 })
 
+router.post('/newCart', verifyToken, (req, res)=>{
+    let {_id} = req.user
+    db.query('INSERT INTO cart (client_id, created_at) VALUES (?, ?)',
+        [_id, new Date()], (err, result)=>{
+            if(err) res.send("couldn't create new cart!!")
+            else {
+                req.session.cart = {id: result.insertId, state: ''}
+                res.redirect(`/user`)
+            }
+        })
+
+})
+
 router.put('/checkedout', verifyToken, (req, res)=>{
     let cart_id = req.session.cart.id
     db.query("UPDATE cart set state = 'checked_out' WHERE id = (?)", [cart_id],
