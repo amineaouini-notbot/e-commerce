@@ -13,8 +13,8 @@ const verifyToken = (req, res, next)=>{
             } catch (err) {
                 res.redirect('/user/signup')
             }
+            next()
     }
-    next()
 }
 
 module.exports = verifyToken
