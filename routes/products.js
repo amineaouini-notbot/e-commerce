@@ -20,7 +20,7 @@ router.get("/byCateg/:id", (req, res)=>{ // checked
 })
 
 router.get('/:id', (req, res)=>{ // checked
-    let {cart} = req.session
+    let cart = !!req.session.cart ? req.session.cart : {id: 0}
     if(!req.session.categories && !req.session.products) res.redirect('/user')
     else {
         let {id} = req.params

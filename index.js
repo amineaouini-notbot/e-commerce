@@ -24,7 +24,8 @@ app.use(session({
 }))
 
 app.get('/', (req, res)=>{
-   
+    if (!!req.session.token) res.redirect('/user')
+    else {
         if( !req.session.categories && !req.session.products){
             db.query('SELECT * from category', (err, result)=>{
                 if (err) {res.send('problem accured!')}
@@ -40,7 +41,7 @@ app.get('/', (req, res)=>{
                                 
                             }}
                             req.session.products = result;
-                            res.render('Home', {categories: req.session.categories, products: result})
+                            res.render('Home', {categories: req.session.categories, products: result, cart: {id: 0}})
                         }
                     })
                     
@@ -48,11 +49,11 @@ app.get('/', (req, res)=>{
             })
         
         } else {
-            let {categories, products} = req.session              
-    
-            res.render('Home', {categories, products})
+            let {categories, products} = req.session      
+            
+            res.render('Home', {categories, products, cart: {id: 0}})
         }
-    
+    }
 })
 
 app.use('/user', userRouter)
