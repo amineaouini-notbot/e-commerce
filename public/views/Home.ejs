@@ -35,11 +35,9 @@
                     <% products.forEach(function(product) { %>
                         
                         <div class="col-3">
-                            
-                            <div><%= product.title %></div>
                             <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="image not found" style="width: 150px;"/>
+                            <div><%= product.title %></div>
                             <p><%=product.price%> - USD <a href="/products/<%=product.id%>">show case</a></p> 
-                            
                             <a href="/user/signup">Add to Cart</a>
                             
                         </div>

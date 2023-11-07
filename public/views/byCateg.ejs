@@ -54,7 +54,7 @@
                             
                             <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="image not found" style="width: 150px;"/>
                             <div><%= product.title %></div>
-                            <p><%=product.price%> - USD</p> <a href="/products/<%=product.id%>">show case</a>
+                            <p><%=product.price%> - USD <a href="/products/<%=product.id%>">show case</a></p> 
                             <% if(cart.id) {%>
 
                                 <form action="/products/addtoCart" method="post">
@@ -63,7 +63,7 @@
                                     <button type="submit">Add to Cart</button>
                                 </form>
                             <%} else {%>
-                                <a href="/user/signup"></a>
+                                <a href="/user/signup">Add to Cart</a>
                             <%}%>
                         </div>
                         <% if (product.id % 4 === 0) {%>

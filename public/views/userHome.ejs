@@ -35,8 +35,9 @@
                         
                         <div class="col-3">
                             
-                            <div><%= product.title %></div>
+                            
                             <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="image not found" style="width: 150px;"/>
+                            <div><%= product.title %></div>
                             <p><%=product.price%> - USD <a href="/products/<%=product.id%>">show case</a></p> 
                             <form action="/products/addtoCart" method="post">
                                 <input type="number" name="product_id" value="<%=product.id%>" hidden>
@@ -44,7 +45,7 @@
                                 <button type="submit">Add to Cart</button>
                             </form>
                         </div>
-                        <% if (product.id % 4 === 0) {%>
+                        <% if (product.id % 5 === 0) {%>
                               <div class="w-100"></div>
                         <%}%>
                     <% }); %> 
