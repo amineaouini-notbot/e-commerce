@@ -7,10 +7,49 @@
     <title>Document</title>
 </head>
 <body>
-    <div>
+    <div class="container"> 
+        <div style="text-align: center;">
 
-        <a href="/user/signup">Sign up</a>
-        <a href="/user/login">login</a>
+            <a href="/user/signup" style="margin-right: 20px;">Sign up</a>
+            <a href="/user/login">login</a>
+        </div>
+        <div class="row">
+            <div class="col col-lg-2">
+                <h5>Categories:</h5>
+                <ul class="list-group-item list-group-item-action">
+                    <li class="list-group-item list-group-item-action list-group-item-dark"><a href="/">All</a></li>
+                    <% categories.forEach(function(category) { %>
+                        <li class="list-group-item list-group-item-action list-group-item-primary" >
+                            <div style="display:flex; justify-content:space-between;">
+                                <a href="/products/byCateg/<%=category.id%>"><%= category.title %></a>
+                                
+                            </div>
+                            
+                        </li>
+                        <% }); %> 
+                    </ul>                    
+                </form>
+            </div>
+            <div class="col col-lg-10">
+                <div class="row">
+                    <% products.forEach(function(product) { %>
+                        
+                        <div class="col-3">
+                            
+                            <div><%= product.title %></div>
+                            <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="image not found" style="width: 150px;"/>
+                            <p><%=product.price%> - USD <a href="/products/<%=product.id%>">show case</a></p> 
+                            
+                            <a href="/user/signup">Add to Cart</a>
+                            
+                        </div>
+                        <% if (product.id % 4 === 0) {%>
+                              <div class="w-100"></div>
+                        <%}%>
+                    <% }); %> 
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
