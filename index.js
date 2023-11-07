@@ -3,10 +3,11 @@ const app = express();
 const db = require('./db/db')
 const userRouter = require('./routes/user')
 const adminRouter = require('./routes/admin')
+const productsRouter = require('./routes/products');
 const session = require('express-session')
 const fileUpload = require('express-fileupload') 
 const methodOverride = require('method-override');
-
+const fs = require('fs')
 
 require('dotenv').config()
 
@@ -23,16 +24,40 @@ app.use(session({
 }))
 
 app.get('/', (req, res)=>{
-    if (req.session.token) {
-        res.redirect('/user')
-    } else {
-
-        res.render('Home')
-    }
+   
+        if( !req.session.categories && !req.session.products){
+            db.query('SELECT * from category', (err, result)=>{
+                if (err) {res.send('problem accured!')}
+                else {
+                    req.session.categories = result;
+                    db.query('SELECT * from product', (err, result)=>{
+                        if (err) {res.send('problem accured!')}
+                        else {
+                            if(!!result[0]){
+                            for(let i in result){
+                                const fileList = fs.readdirSync(__dirname+'/public/upload/' + result[i].id)
+                                result[i].images = fileList; 
+                                
+                            }}
+                            req.session.products = result;
+                            res.render('Home', {categories: req.session.categories, products: result})
+                        }
+                    })
+                    
+                }
+            })
+        
+        } else {
+            let {categories, products} = req.session              
+    
+            res.render('Home', {categories, products})
+        }
+    
 })
 
 app.use('/user', userRouter)
 app.use('/admin', adminRouter)
+app.use('/products' , productsRouter) 
 
 const PORT = 5000
 app.listen(PORT, ()=>{

@@ -1,6 +1,6 @@
 const router = require('express').Router()
-const db = require('../../db/db');
-const verifyToken = require('../verifyToken')
+const db = require('../db/db');
+const verifyToken = require('./verifyToken')
 const fs = require('fs')
 
 router.get("/byCateg/:id", verifyToken, (req, res)=>{
@@ -28,7 +28,7 @@ router.get('/:id', verifyToken, (req, res)=>{
             else{
                 if(result[0]){
                     let product = result[0]
-                    const imagesList = fs.readdirSync(__dirname+'/../../public/upload/' + id)
+                    const imagesList = fs.readdirSync(__dirname+'/../public/upload/' + id)
                     product.images = imagesList
                     res.render('product', {product, cart})
                 }
