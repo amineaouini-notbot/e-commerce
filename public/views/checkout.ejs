@@ -40,7 +40,7 @@
                                 <p class="col col-lg-2"><%= item.price %></p>
                                 <div class="col col-lg-3">
                                     <% if(state !== 'checked_out') { %>
-                                    <form action="/user/products/removeFromCart/<%=item.id%>?_method=DELETE" method="post">
+                                    <form action="/products/removeFromCart/<%=item.id%>?_method=DELETE" method="post">
                                         <button type="submit" class="btn btn-danget">Delete</button>
                                     </form>
                                     <%}%>
@@ -58,7 +58,7 @@
                 </ul>
                 <div class="col col-lg-3">
                    
-                    <form action="/user/products/newCart" method="post">
+                    <form action="/products/newCart" method="post">
                         <button type="submit">Make New Cart +</button>
                     </form>
                 

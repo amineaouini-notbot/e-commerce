@@ -23,7 +23,7 @@
                     <% categories.forEach(function(category) { %>
                         <li class="list-group-item list-group-item-action list-group-item-primary" >
                             <div style="display:flex; justify-content:space-between;">
-                                <a href="/user/products/bycateg/<%=category.id%>"><%= category.title %></a>
+                                <a href="/products/bycateg/<%=category.id%>"><%= category.title %></a>
                                 
                             </div>
                             
@@ -40,8 +40,8 @@
                             
                             <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="image not found" style="width: 150px;"/>
                             <div><%= product.title %></div>
-                            <p><%=product.price%> - USD</p> <a href="/user/products/<%=product.id%>">show case</a>
-                            <form action="/user/products/addtoCart" method="post">
+                            <p><%=product.price%> - USD</p> <a href="/products/<%=product.id%>">show case</a>
+                            <form action="/products/addtoCart" method="post">
                                 <input type="number" name="product_id" value="<%=product.id%>" hidden>
                                 <input type="number" name="cart_id" value="<%=cart.id%>" hidden>
                                 <button type="submit">Add to Cart</button>

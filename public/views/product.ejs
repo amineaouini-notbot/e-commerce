@@ -10,7 +10,7 @@
         <h1><%= product.title %></h1>
 
         <h3><%= product.price %> - USD</h3>
-        <form action="/user/products/addtoCart" method="post">
+        <form action="/products/addtoCart" method="post">
             <input type="number" name="product_id" value="<%=product.id%>" hidden>
             <input type="number" name="cart_id" value="<%=cart.id%>" hidden>
             <button type="submit">Add to Cart</button>
