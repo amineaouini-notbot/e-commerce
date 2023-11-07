@@ -19,7 +19,7 @@
             <div class="col col-lg-2">
                 <h5>Categories:</h5>
                 <ul class="list-group-item list-group-item-action">
-                    <li class="list-group-item list-group-item-action list-group-item-dark"><a href="/user">All</a></li>
+                    <li class="list-group-item list-group-item-action list-group-item-dark"><a href="/">All</a></li>
                     <% categories.forEach(function(category) { %>
                         <li class="list-group-item list-group-item-action list-group-item-primary" >
                             <div style="display:flex; justify-content:space-between;">
@@ -41,11 +41,16 @@
                             <img src="/upload/<%= product.id %>/<%= product.images[0] %>" alt="image not found" style="width: 150px;"/>
                             <div><%= product.title %></div>
                             <p><%=product.price%> - USD</p> <a href="/products/<%=product.id%>">show case</a>
-                            <form action="/products/addtoCart" method="post">
-                                <input type="number" name="product_id" value="<%=product.id%>" hidden>
-                                <input type="number" name="cart_id" value="<%=cart.id%>" hidden>
-                                <button type="submit">Add to Cart</button>
-                            </form>
+                            <% if(cart.id) {%>
+
+                                <form action="/products/addtoCart" method="post">
+                                    <input type="number" name="product_id" value="<%=product.id%>" hidden>
+                                    <input type="number" name="cart_id" value="<%=cart.id%>" hidden>
+                                    <button type="submit">Add to Cart</button>
+                                </form>
+                            <%} else {%>
+                                <a href="/user/signup"></a>
+                            <%}%>
                         </div>
                         <% if (product.id % 4 === 0) {%>
                               <div class="w-100"></div>

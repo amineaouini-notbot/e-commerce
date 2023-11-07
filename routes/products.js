@@ -3,8 +3,9 @@ const db = require('../db/db');
 const verifyToken = require('./verifyToken')
 const fs = require('fs')
 
-router.get("/byCateg/:id", verifyToken, (req, res)=>{ // checked
-    let {cart} = req.session
+router.get("/byCateg/:id", (req, res)=>{ // checked
+    let cart = !!req.session.cart ? req.session.cart : {id: 0} 
+     
     if(!req.session.categories && !req.session.products) res.redirect('/user')
     else{
         let {id} = req.params;
@@ -18,7 +19,7 @@ router.get("/byCateg/:id", verifyToken, (req, res)=>{ // checked
     }
 })
 
-router.get('/:id', verifyToken, (req, res)=>{ // checked
+router.get('/:id', (req, res)=>{ // checked
     let {cart} = req.session
     if(!req.session.categories && !req.session.products) res.redirect('/user')
     else {
