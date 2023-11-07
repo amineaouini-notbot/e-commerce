@@ -92,6 +92,12 @@ router.post('/login', (req, res)=>{
 
 })
 
+router.post('/logout', verifyToken, (req, res)=>{
+    req.session.token = null
+    req.session.cart = null
+    res.redirect('/')
+})
+
 router.get('/', verifyToken, (req, res)=>{
     let {cart} = req.session
     if( !req.session.categories && !req.session.products){
