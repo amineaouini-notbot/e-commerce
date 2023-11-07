@@ -32,11 +32,14 @@ paypal
                 + detailes.payer.name.given_name)
             })
             .then(()=>{
-                fetch('/user/products/checkedout', {
+                fetch('/products/checkedout', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     }
+                })
+                .then(()=>{
+                    window.location.replace(window.location.href.split('checkout')[0])
                 })
             })
         }
