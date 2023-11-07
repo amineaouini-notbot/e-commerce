@@ -205,6 +205,5 @@ router.post('/checkout', verifyToken, async (req, res)=>{
         })
 })
 
-router.use('/products' , require('./user/products')) 
 
 module.exports = router;

@@ -3,7 +3,7 @@ const db = require('../db/db');
 const verifyToken = require('./verifyToken')
 const fs = require('fs')
 
-router.get("/byCateg/:id", verifyToken, (req, res)=>{
+router.get("/byCateg/:id", verifyToken, (req, res)=>{ // checked
     let {cart} = req.session
     if(!req.session.categories && !req.session.products) res.redirect('/user')
     else{
@@ -18,7 +18,7 @@ router.get("/byCateg/:id", verifyToken, (req, res)=>{
     }
 })
 
-router.get('/:id', verifyToken, (req, res)=>{
+router.get('/:id', verifyToken, (req, res)=>{ // checked
     let {cart} = req.session
     if(!req.session.categories && !req.session.products) res.redirect('/user')
     else {
@@ -38,7 +38,7 @@ router.get('/:id', verifyToken, (req, res)=>{
     
 })
 
-router.post('/addtoCart', verifyToken, (req, res)=>{
+router.post('/addtoCart', verifyToken, (req, res)=>{ // checked
     let {product_id, cart_id} = req.body
     db.query('INSERT INTO cart_items (cart_id, product_id, created_at) VALUES (?, ?, ?)', [cart_id, product_id, new Date()],
     (err, result)=>{
@@ -50,7 +50,7 @@ router.post('/addtoCart', verifyToken, (req, res)=>{
     })
 })
 
-router.delete('/removeFromCart/:id', verifyToken, (req, res)=>{
+router.delete('/removeFromCart/:id', verifyToken, (req, res)=>{ // checked
     let {id} = req.params;
     db.query("DELETE FROM cart_items WHERE id = (?)", [id], (err, result)=>{
         if(err) res.send("couldn't delete cart item!!")
@@ -60,7 +60,7 @@ router.delete('/removeFromCart/:id', verifyToken, (req, res)=>{
     })
 })
 
-router.post('/newCart', verifyToken, (req, res)=>{
+router.post('/newCart', verifyToken, (req, res)=>{ // checked
     let {_id} = req.user
     db.query('INSERT INTO cart (client_id, created_at) VALUES (?, ?)',
         [_id, new Date()], (err, result)=>{
@@ -73,11 +73,12 @@ router.post('/newCart', verifyToken, (req, res)=>{
 
 })
 
-router.put('/checkedout', verifyToken, (req, res)=>{
+router.put('/checkedout', verifyToken, (req, res)=>{ // checked
     let cart_id = req.session.cart.id
     db.query("UPDATE cart set state = 'checked_out' WHERE id = (?)", [cart_id],
                 (err, result)=>{
                     if(err) res.send("couldn't update cart state")
+                    req.session.cart.state = 'checked_out'
                     res.status(200).send("cart state is updated")
                 })
 })
