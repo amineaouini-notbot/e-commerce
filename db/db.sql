@@ -48,5 +48,5 @@ CREATE TABLE cart_items(
     FOREIGN KEY (product_id) REFERENCES product(id)
 );
 
-INSERT INTO admin (username, password)
+INSERT INTO `admin` (username, password)
 VALUES ('admin', md5("admin"));
