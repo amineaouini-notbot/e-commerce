@@ -205,26 +205,29 @@ router.delete('/categ/delete/:id', verifyAdmin, (req, res)=>{
 
 router.delete('/delete/prod/:id', (req, res)=>{
     let {id} = req.params;
-    db.query('DELETE FROM product WHERE id = (?)', [id], (err, result)=>{
-        if (err) res.send('coulnt delete prod!')
-        else{
-                
+    db.query("DELETE FROM cart_items WHERE product_id = (?)", [id], (err, result)=>{
+        if(err) res.send("couldn't delete product from db!!")
+        db.query('DELETE FROM product WHERE id = (?)', [id], (err, result)=>{
+            if (err) res.send('coulnt delete prod!')
+            else{
+        
 
             fs.rm(path.join(__dirname, '..', 'public', 'upload', id), { recursive: true, force: true }, err=>{
                 if (err) throw err;
                 console.log(id + '=> product prics deleted')
-            });
-            let {products} = req.session
-            let currentProducts = []
-            for(let i in products){
-                console.log()
-                if (products[i].id !== parseInt(id)){
-                    currentProducts.push(products[i]);
+                });
+                let {products} = req.session
+                let currentProducts = []
+                for(let i in products){
+                    console.log()
+                    if (products[i].id !== parseInt(id)){
+                        currentProducts.push(products[i]);
+                    }
                 }
+                req.session.products = currentProducts
+                res.redirect('/admin')
             }
-            req.session.products = currentProducts
-            res.redirect('/admin')
-        }
+        })
     })
 })
 
