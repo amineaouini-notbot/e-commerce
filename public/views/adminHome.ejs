@@ -34,7 +34,7 @@
             </div>
             <div class="col col-lg-10">
                 <div class="row">
-                    <% products.forEach(function(product) { %>
+                    <% products.forEach(function(product, index) { %>
                         
                         <div class="col-3">
                             
@@ -48,7 +48,7 @@
                                 <a href="/admin/product/<%=product.id%>/edit">edit</a>
                             </div>
                         </div>
-                        <% if (product.id % 4 === 0) {%>
+                        <% if (index+1 % 5 === 0) {%>
                               <div class="w-100"></div>
                         <%}%>
                     <% }); %> 
