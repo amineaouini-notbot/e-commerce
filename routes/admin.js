@@ -18,8 +18,8 @@ router.get('/', verifyAdmin, (req, res)=>{
                     if (err) {res.send('problem accured!')}
                     else {
                         if(!!result[0]){
-                        for(let i in result){
-                            const fileList = fs.readdirSync(__dirname+'/../public/upload/' + result[i].id)
+                        for(let i in result){ 
+                            const fileList = fs.readdirSync(path.join(__dirname, '..', 'public', 'upload', ''+result[i].id))
                             result[i].images = fileList; 
                             
                         }}

@@ -8,7 +8,7 @@ const session = require('express-session')
 const fileUpload = require('express-fileupload') 
 const methodOverride = require('method-override');
 const fs = require('fs')
-
+const path = require('path')
 require('dotenv').config()
 
 app.use(fileUpload())
@@ -35,8 +35,8 @@ app.get('/', (req, res)=>{
                         if (err) {res.send('problem accured!')}
                         else {
                             if(!!result[0]){
-                            for(let i in result){
-                                const fileList = fs.readdirSync(__dirname+'/public/upload/' + result[i].id)
+                            for(let i in result){ path.join(__dirname, '..', 'public', 'upload', result[i].id)
+                                const fileList = fs.readdirSync(path.join(__dirname, '..', 'public', 'upload', result[i].id.toString()))
                                 result[i].images = fileList; 
                                 
                             }}

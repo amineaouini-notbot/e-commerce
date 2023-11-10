@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const verifyToken = require('./verifyToken')
 const fs = require('fs')
 const paypal = require('@paypal/checkout-server-sdk')
-
+const path = require('path')
 require('dotenv').config()
 
 const env = process.env.NODE_ENV
@@ -109,9 +109,10 @@ router.get('/', verifyToken, (req, res)=>{
                 db.query('SELECT * from product', (err, result)=>{
                     if (err) {res.send('problem accured!')}
                     else {
-                        if(!!result[0]){
+                        if(!!result[0]){ 
                         for(let i in result){
-                            const fileList = fs.readdirSync(__dirname+'/../public/upload/' + result[i].id)
+                            
+                            const fileList = fs.readdirSync(path.join(__dirname, '..', 'public', 'upload', result[i].id.toString()))
                             result[i].images = fileList; 
                             
                         }}
@@ -143,7 +144,7 @@ router.get('/checkout', verifyToken, (req, res)=>{
                         let total = 0;
                         let items = result;
                         for(let i in items){
-                            const imagesList = fs.readdirSync(__dirname+'/../public/upload/' + items[i].product_id)
+                            const imagesList = fs.readdirSync(path.join(__dirname, '..', 'public', 'upload', items[i].product_id.toString()))
                             items[i].image = imagesList[0];
                             total += items[i].price
                         }

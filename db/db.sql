@@ -49,4 +49,4 @@ CREATE TABLE cart_items(
 );
 
 INSERT INTO `admin` (username, password)
-VALUES ('admin', md5("admin"));
+VALUES ('admin', md5('admin'));
