@@ -212,7 +212,7 @@ router.delete('/delete/prod/:id', (req, res)=>{
             else{
         
 
-            fs.rm(path.join(__dirname, '..', 'public', 'upload', id), { recursive: true, force: true }, err=>{
+            fs.rm(path.join(__dirname, '..', 'public', 'upload', id.toString()), { recursive: true, force: true }, err=>{
                 if (err) throw err;
                 console.log(id + '=> product prics deleted')
                 });
@@ -234,7 +234,7 @@ router.delete('/delete/prod/:id', (req, res)=>{
 router.delete('/delete/product/:id/image/:image', verifyAdmin, (req, res)=>{
     let {id, image} = req.params;
     let images = []
-    fs.unlink(path.join(__dirname, "..", 'public', 'upload', id, image), err=>{
+    fs.unlink(path.join(__dirname, "..", 'public', 'upload', id.toString(), image.toString()), err=>{
         if (err) res.send("couldn't delete image")
         else {
             let products = req.session.products; 
