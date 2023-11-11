@@ -35,8 +35,8 @@ app.get('/', (req, res)=>{
                         if (err) {res.send('problem accured!')}
                         else {
                             if(!!result[0]){
-                            for(let i in result){ path.join(__dirname, '..', 'public', 'upload', result[i].id)
-                                const fileList = fs.readdirSync(path.join(__dirname, '..', 'public', 'upload', result[i].id.toString()))
+                            for(let i in result){ 
+                                const fileList = fs.readdirSync(path.join(__dirname, 'public', 'upload', result[i].id.toString()))
                                 result[i].images = fileList; 
                                 
                             }}
